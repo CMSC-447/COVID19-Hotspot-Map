@@ -10,7 +10,7 @@ Create React App
 
 
 Frontend SETUP
-Navigate to 'covid hotspot map'
+Navigate to 'hotspot-map'
 enter the command 'yarn start'
 
 You will be navigated to localhost://3000
