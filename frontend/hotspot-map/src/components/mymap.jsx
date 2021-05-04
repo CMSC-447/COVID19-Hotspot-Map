@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {MapContainer, GeoJSON, TileLayer, Marker} from "react-leaflet"
+import {MapContainer, GeoJSON, TileLayer} from "react-leaflet"
 import county_ca from './../data/county_ca.json'
 import "leaflet/dist/leaflet.css";
 
@@ -9,6 +9,7 @@ class MyMap extends Component {
     state = { };
 
     componentDidMount(){
+        
         console.log(county_ca);
     }
 
@@ -43,7 +44,7 @@ class MyMap extends Component {
     render() {
         return ( 
             <div>
-                <MapContainer style = {{height: "80vh", width: '80%', margin: 'auto'}} zoom = {6.5} center = {[38, -122]} scrollWheelZoom = "false">
+                <MapContainer style = {{height: "80vh", width: '80%', margin: 'auto'}} zoom = {6} center = {[38, -122]} scrollWheelZoom = {false}>
                     <GeoJSON style = {this.countyStyle} data ={county_ca.features} onEachFeature={this.onEachCounty}/>
                     <TileLayer
                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
