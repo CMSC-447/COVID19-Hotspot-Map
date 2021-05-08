@@ -5,6 +5,9 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet'
 import data from './../data/markers.json'
 import icon from './marker.png';
+
+
+
 var datainfo = [];
 
 let DefaultIcon = L.icon({
@@ -23,24 +26,25 @@ class MyMap extends Component {
             locations:[],
             legend: {},
             hovered:false,
-            check:false,
-            
-
+            check:false,   
         };
     }
 
     componentDidMount() {
+        
 
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+          }
         // arrange data for marking and popups
         for (var i = 0; i < data.length; i++) {
             this.state.locations.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county});
             datainfo.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county});
+
             
         }
-        
-
 
     }
 
@@ -64,35 +68,53 @@ class MyMap extends Component {
    
     onEachCounty = (county, layer) =>{
         
+        
         const countyName = county.properties.NAME;
         
         layer.bindTooltip(`${countyName}`); // county name display.
+
+        //change started 
         layer.on('click', function (e) {
-            // console.log(this.state.locations[1]);
-            document.getElementById("info").innerHTML = "<strong>County:</strong> " + `${countyName}` + "<br><br>" +  
-            "<strong>Prisons:</strong> " + "<br>";
+            document.getElementById("info").style.visibility = "visible";
+            document.getElementById("info").innerHTML = `<h2 style='text-align:center'>${countyName}</h2><strong style='padding-left:15px'>Prisons:</strong><br>`;
+
             // document.getElementById("info").innerHTML = "Prisons: " + "<br>" ;
 
-            for(var i = 0; i < datainfo.length; i++ ){
+            var exist = false;
+            var i =0;
+            for( i= 0; i < datainfo.length; i++ ){
                 if(datainfo[i].county === `${countyName}`){
-                    console.log(datainfo[i])
-                    document.getElementById("info").innerHTML += "<li>" + datainfo[i].name + "  (City: " + datainfo[i].city + ")"+"</li>" ;              
+                    exist = true;
+                }
+
+            }            
+
+            if(exist){
+                for(i = 0; i < datainfo.length; i++ ){
+                    if(datainfo[i].county === `${countyName}`){
+                        document.getElementById("info").innerHTML += "<li style='padding-left:25px'>" + datainfo[i].name + "  (City: " + datainfo[i].city + ")</li>" ;
+                    }
                 }
             }
-            console.log(datainfo[1].name);
            
+                    
+            else{
+                document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>" ;
+            }
+            var elmnt = document.getElementById("info");
+            elmnt.scrollIntoView({behavior: "smooth"});
+        
+
           });
-        
-       // layer.document.getElementById("info").innerHTML = `${countyName}`;
-        
-         
+
+
         if(county.properties.COUNTYFP > 34){
             layer.options.fillColor = "yellow"
         }
     };
 
     handlecheck = (event) =>{
-        console.log(event.target.value)
+       
         if(document.getElementById('chkbx').checked){
             this.setState({
 
@@ -107,27 +129,36 @@ class MyMap extends Component {
         }
     }
 
-    // infoShow =() =>{
-    //     infoDisplay = true; 
-    // }
 
+    prisonPrint = (e) =>{
+        var elmnt = document.getElementById("info");
+        elmnt.scrollIntoView({behavior: "smooth"});
+        document.getElementById("info").style.visibility = "visible";
+        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>"
+        
+     
+    }
 
+  
     render() {
         const {check} = this.state; 
+       
         return ( 
             
             <div>
-                <div style = {{  width: '50%', margin:"auto" , display:"block", overflow:"auto"}}>
+                <div style = {{  width: '70%', margin:"auto" , display:"block", overflow:"auto"}}>
                     
                 <input id="chkbx" onChange={this.handlecheck.bind(this)} type="checkbox" style={{float:"right"}}/> <label style={{float:"right", fontSize:"14px"}}>Show Tile Layer</label>
                 </div>
-                <MapContainer style = {{border:"2px solid #393F44", height: "80vh", width: '50%', margin: 'auto'}} zoom = {6} center = {[38, -120]} scrollWheelZoom = {true}>
+                <MapContainer 
+                
+                style = {{border:"2px solid #393F44", height: "72vh", width: '70%', margin: 'auto'}} zoom = {6} center = {[37.5, -120]} scrollWheelZoom = {true}>
                     <GeoJSON style = {this.countyStyle} data ={county_ca.features} onEachFeature={this.onEachCounty} 
                     onMouseMove={this.handleMove} onMouseLeave={this.handleLeave} />
                  
                  
                  
-                    {check ? (<TileLayer style={{visibility:"hidden",color:"pink"}}
+                    {check ? (<TileLayer style={{visibility:"hidden"}}
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
                     />):("")}
@@ -137,7 +168,14 @@ class MyMap extends Component {
 
 
                         // marker and detailed display.
-                        <Marker key={`marker-${idx}`} position={location.position}>
+                        <Marker 
+                        eventHandlers={{
+                            click: (e) => {
+                              this.prisonPrint(e)
+                            
+                            },
+                          }}
+                        key={`marker-${idx}`} position={location.position}>
                             <Tooltip>
                                 <span>
                                     Prison: &nbsp;
@@ -155,10 +193,9 @@ class MyMap extends Component {
                         </Marker>
                     )}
                     
-
-
                 </MapContainer>
-                <div id="info" style={{paddingTop:"20px", paddingLeft:"20px",textAlign:"left", height:"500px", width: '50%', margin: 'auto', backgroundColor:"pink", marginTop:"60px"}}></div>
+
+                
                 
             </div>
         );
