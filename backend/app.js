@@ -23,7 +23,7 @@ db.connect( err => {
 
 
 app.get('/load_counties', (req, res) => {
-  let sql = "SELECT DISTINCT c_name FROM cal_counties;";
+  let sql = "SELECT * FROM cal_counties;";
   db.query(sql,(err, results) => {
       if (err) {
           return console.error('error: ' + err.message);
@@ -53,12 +53,14 @@ app.get('/get_prisons', (req, res) => {
 
 });
 
-app.get('/start_end_date/:val', (req, res) => {
+app.get('/getData/:val', (req, res) => {
 
   var qname = req.params.val || "";
+  qname = qname.split(" ");
   console.log(qname);
 
-  let sql = "SELECT DISTINCT date FROM prison_" + qname + ";";
+  let sql = "SELECT * FROM prison_" + qname[0] + " WHERE date='" + qname[1]+"'";
+  console.log(sql);
   db.query(sql,(err, results) => {
       if (err) {
           return console.error('error: ' + err.message);

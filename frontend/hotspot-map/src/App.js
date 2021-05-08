@@ -6,7 +6,7 @@ import './App.css'
 var displaytodaydate;
 var cty;
 var pri;
-var date;
+
 
 
 class App extends React.Component {
@@ -21,13 +21,14 @@ class App extends React.Component {
       selectCounty:'None',
       selectPrison:'None',
       theDate: '',
+      pri_uni_ref:[],
     };
 
   }
   
 
   // to find the today's date
-  datetime = () =>{
+  datetime = () => {
 
     var showdate=new Date();
     var date = showdate.getDate();
@@ -77,19 +78,15 @@ class App extends React.Component {
     return data;
   }
 
-  async getStartEnd(val) {
-    const response = await fetch('/start_end_date/'+ val);
+  async getData() {
+    const response = await fetch('/getData/' + this.state.pri_uni_ref + " " + this.state.theDate);
     const data = await response.json();
 
     if (response.ok){
-      console.log("Connected to backend API from getStartEnd().");
+      console.log("Connected to backend API from getData().");
     }
     else {
-      console.log("Could not connect to backend API from getStartEnd().");
-    }
-
-    for (var i = 0; i < data.length; i++){
-      data[i].date = data[i].date.slice(0,10)
+      console.log("Could not connect to backend API from getData().");
     }
 
 
@@ -100,6 +97,8 @@ class App extends React.Component {
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
+
+    //console.log(cty);
 
 
     //probably need to move this to a new method
@@ -122,7 +121,7 @@ class App extends React.Component {
     var tar = event.target.value;
 
     pri.then( result => {
-      this.state.prisons = [];
+      this.setState({prisons:[]});
 
       // get the match for the counties.
       for (var i = 0; i < result.length; i++) {
@@ -140,8 +139,7 @@ class App extends React.Component {
           selectPrison: 'None',
           selectCounty: 'None'
       });
-      }
-
+    }
     });
 
   }
@@ -152,7 +150,7 @@ class App extends React.Component {
     // if a value is set for prison
     if(event.target.value){
       this.setState({
-        selectPrison: event.target.value
+        selectPrison: event.target.value,
       });
     }
     // if the user goes back to having no value for prison
@@ -162,7 +160,7 @@ class App extends React.Component {
     });
     }
 
-    console.log(event.target.value)
+    //console.log(event.target.value)
 
     var uni_ref;
 
@@ -173,15 +171,15 @@ class App extends React.Component {
       }
     }
 
-    //console.log(uni_ref);
-
-    date = this.getStartEnd(uni_ref);
-    console.log(date);
+    // immediately update the ref for prisons.
+    this.setState({pri_uni_ref: uni_ref}, function () {
+      //console.log(this.state.pri_uni_ref);
+    });
 
   }
 
   // for the date
-  handleInputChange = (event) =>{
+  handleInputChange = (event) => {
     event.preventDefault()
     console.log(event.target.value)
     this.setState({
@@ -189,10 +187,14 @@ class App extends React.Component {
     })
   }
   // data collected for the whole form
-  handleSubmit=(event) =>{
+  handleSubmit=(event) => {
     event.preventDefault()
-    const Data = this.state
-    console.log("final data", Data)
+
+    var pass_data = this.getData();
+    console.log("Fetched data", pass_data)
+
+    //const Data = this.state
+    //console.log("final data", Data)
 
   } 
  
