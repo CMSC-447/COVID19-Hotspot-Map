@@ -10,6 +10,12 @@ var cty;
 var pri;
 var date;
 
+// making todays date accessible to all the methods
+var displaytodaydate;
+var cty;
+var pri;
+
+
 
 class App extends React.Component {
   
@@ -23,13 +29,17 @@ class App extends React.Component {
       selectCounty:'None',
       selectPrison:'None',
       theDate: '',
+
+      pri_uni_ref:[],
     };
 
   }
   
 
   // to find the today's date
-  datetime = () =>{
+
+  datetime = () => {
+
 
     var showdate=new Date();
     var date = showdate.getDate();
@@ -49,6 +59,7 @@ class App extends React.Component {
     return(
       <div></div>
     )
+
 
   }
   async loadCounties() {
@@ -79,19 +90,15 @@ class App extends React.Component {
     return data;
   }
 
-  async getStartEnd(val) {
-    const response = await fetch('/start_end_date/'+ val);
+  async getData() {
+    const response = await fetch('/getData/' + this.state.pri_uni_ref + " " + this.state.theDate);
     const data = await response.json();
 
     if (response.ok){
-      console.log("Connected to backend API from getStartEnd().");
+      console.log("Connected to backend API from getData().");
     }
     else {
-      console.log("Could not connect to backend API from getStartEnd().");
-    }
-
-    for (var i = 0; i < data.length; i++){
-      data[i].date = data[i].date.slice(0,10)
+      console.log("Could not connect to backend API from getData().");
     }
 
 
@@ -99,9 +106,11 @@ class App extends React.Component {
   }
 
 
+
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
+
 
 
     //probably need to move this to a new method
@@ -124,7 +133,8 @@ class App extends React.Component {
     var tar = event.target.value;
 
     pri.then( result => {
-      this.setState.prisons = [];
+
+      this.setState({prisons:[]});
 
       // get the match for the counties.
       for (var i = 0; i < result.length; i++) {
@@ -142,7 +152,8 @@ class App extends React.Component {
           selectPrison: 'None',
           selectCounty: 'None'
       });
-      }
+
+    }
 
     });
 
@@ -154,7 +165,9 @@ class App extends React.Component {
     // if a value is set for prison
     if(event.target.value){
       this.setState({
-        selectPrison: event.target.value
+
+        selectPrison: event.target.value,
+
       });
     }
     // if the user goes back to having no value for prison
@@ -164,7 +177,6 @@ class App extends React.Component {
     });
     }
 
-    console.log(event.target.value)
 
     var uni_ref;
 
@@ -175,15 +187,19 @@ class App extends React.Component {
       }
     }
 
-    //console.log(uni_ref);
 
-    date = this.getStartEnd(uni_ref);
-    console.log(date);
+    // immediately update the ref for prisons.
+    this.setState({pri_uni_ref: uni_ref}, function () {
+      //console.log(this.state.pri_uni_ref);
+    });
+
 
   }
 
   // for the date
+
   handleInputChange = (event) =>{
+
     event.preventDefault()
     console.log(event.target.value)
     this.setState({
@@ -191,11 +207,13 @@ class App extends React.Component {
     })
   }
   // data collected for the whole form
+
   handleSubmit=(event) =>{
     document.getElementById("chosenData").style.visibility = "visible";
     event.preventDefault()
-    const Data = this.state
-    console.log("final data", Data)
+    var pass_data = this.getData();
+    console.log("Fetched data", pass_data)
+  
 
   } 
    // change started 
@@ -203,6 +221,7 @@ class App extends React.Component {
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
   // end of change 
+
  
   render() {  
     const {theDate} = this.state 
@@ -216,6 +235,7 @@ class App extends React.Component {
       <div>
         <div > <h1 
         style = {{textAlign: "Center"}}> California Covid-19 Hotspot Map</h1></div>
+
       
       
         <div style={{margin:"auto", textAlign:"center", width:"70%", display:"block", overflow:"auto"}}>
@@ -224,6 +244,7 @@ class App extends React.Component {
         <div style={{float:"left" }}>
 
           <select  style={{marginRight:"40px", marginBottom:"25px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
+
            
             <option value=""  defaultValue >SELECT COUNTY</option>
             {this.state.county.map(x => {
@@ -232,7 +253,9 @@ class App extends React.Component {
 
           </select>
 
+
           <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"25px", marginRight:"40px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
+
            
             <option value="" defaultValue>SELECT PRISON</option>
             {
@@ -246,6 +269,7 @@ class App extends React.Component {
         </div>
         
         <div style={{float:"left" }}>
+
 
           <input id="myDate" type="date" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"25px", marginRight:"40px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
       
@@ -261,11 +285,13 @@ class App extends React.Component {
               {/* end of change */}
               <p>County: {selectCounty} &emsp;&emsp;  Prison: {selectPrison} &emsp;&emsp;  Date: {theDate}</p>
              </div>
+
         </div>
 
         <div>
     
           <MyMap />
+
 
           {/* change started */}
           <div style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
@@ -277,7 +303,10 @@ class App extends React.Component {
             <div id="info" style={{visibility:"hidden", paddingBottom:"20px", paddingTop:"20px", textAlign:"left", height:"auto", width: '40%', margin: 'auto', border:"2px solid #393F44 ", marginTop:"60px"}}>             
             </div>
             {/* end of change */}
+
       </div>
+      </div>    
+
       </div>    
 
     );

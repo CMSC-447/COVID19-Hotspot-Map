@@ -6,7 +6,14 @@ import L from 'leaflet'
 import data from './../data/markers.json'
 import icon from './marker.png';
 
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    iconSize:[20,20],
+    iconAnchor:[5,10],
+    popupAnchor:[5,5]
+});
 
+L.Marker.prototype.options.icon = DefaultIcon;
 
 var datainfo = [];
 
@@ -24,13 +31,16 @@ class MyMap extends Component {
         super();
         this.state = {
             locations:[],
-            legend: {},
+
+      
             hovered:false,
             check:false,   
+
         };
     }
 
     componentDidMount() {
+
         
 
         window.onbeforeunload = function () {
@@ -45,6 +55,7 @@ class MyMap extends Component {
 
             
         }
+
 
     }
 
@@ -70,6 +81,7 @@ class MyMap extends Component {
         
         
         const countyName = county.properties.NAME;
+
         
         layer.bindTooltip(`${countyName}`); // county name display.
 
@@ -113,6 +125,7 @@ class MyMap extends Component {
         }
     };
 
+
     handlecheck = (event) =>{
        
         if(document.getElementById('chkbx').checked){
@@ -146,6 +159,7 @@ class MyMap extends Component {
         return ( 
             
             <div>
+
                 <div style = {{  width: '70%', margin:"auto" , display:"block", overflow:"auto"}}>
                     
                 <input id="chkbx" onChange={this.handlecheck.bind(this)} type="checkbox" style={{float:"right"}}/> <label style={{float:"right", fontSize:"14px"}}>Show Tile Layer</label>
@@ -176,6 +190,7 @@ class MyMap extends Component {
                             },
                           }}
                         key={`marker-${idx}`} position={location.position}>
+
                             <Tooltip>
                                 <span>
                                     Prison: &nbsp;
@@ -192,7 +207,7 @@ class MyMap extends Component {
                                 </Tooltip>
                         </Marker>
                     )}
-                    
+
                 </MapContainer>
 
                 
