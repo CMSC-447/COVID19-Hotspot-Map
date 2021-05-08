@@ -1,6 +1,14 @@
 import React from "react";
 import MyMap from "./components/mymap";
 import './App.css'
+import icon from './logo192.png'
+
+
+// making todays date accessible to all the methods
+var displaytodaydate;
+var cty;
+var pri;
+var date;
 
 // making todays date accessible to all the methods
 var displaytodaydate;
@@ -21,6 +29,7 @@ class App extends React.Component {
       selectCounty:'None',
       selectPrison:'None',
       theDate: '',
+
       pri_uni_ref:[],
     };
 
@@ -28,7 +37,9 @@ class App extends React.Component {
   
 
   // to find the today's date
+
   datetime = () => {
+
 
     var showdate=new Date();
     var date = showdate.getDate();
@@ -48,6 +59,7 @@ class App extends React.Component {
     return(
       <div></div>
     )
+
 
   }
   async loadCounties() {
@@ -94,11 +106,11 @@ class App extends React.Component {
   }
 
 
+
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
 
-    //console.log(cty);
 
 
     //probably need to move this to a new method
@@ -121,6 +133,7 @@ class App extends React.Component {
     var tar = event.target.value;
 
     pri.then( result => {
+
       this.setState({prisons:[]});
 
       // get the match for the counties.
@@ -139,7 +152,9 @@ class App extends React.Component {
           selectPrison: 'None',
           selectCounty: 'None'
       });
+
     }
+
     });
 
   }
@@ -150,7 +165,9 @@ class App extends React.Component {
     // if a value is set for prison
     if(event.target.value){
       this.setState({
+
         selectPrison: event.target.value,
+
       });
     }
     // if the user goes back to having no value for prison
@@ -160,7 +177,6 @@ class App extends React.Component {
     });
     }
 
-    //console.log(event.target.value)
 
     var uni_ref;
 
@@ -171,15 +187,19 @@ class App extends React.Component {
       }
     }
 
+
     // immediately update the ref for prisons.
     this.setState({pri_uni_ref: uni_ref}, function () {
       //console.log(this.state.pri_uni_ref);
     });
 
+
   }
 
   // for the date
-  handleInputChange = (event) => {
+
+  handleInputChange = (event) =>{
+
     event.preventDefault()
     console.log(event.target.value)
     this.setState({
@@ -187,21 +207,27 @@ class App extends React.Component {
     })
   }
   // data collected for the whole form
-  handleSubmit=(event) => {
-    event.preventDefault()
 
+  handleSubmit=(event) =>{
+    document.getElementById("chosenData").style.visibility = "visible";
+    event.preventDefault()
     var pass_data = this.getData();
     console.log("Fetched data", pass_data)
-
-    //const Data = this.state
-    //console.log("final data", Data)
+  
 
   } 
+   // change started 
+  scrollUp= ()=>{ 
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+  // end of change 
+
  
   render() {  
     const {theDate} = this.state 
     const {selectPrison} = this.state  
     const {selectCounty} = this.state
+
     return (
 
       <div>   
@@ -209,15 +235,16 @@ class App extends React.Component {
       <div>
         <div > <h1 
         style = {{textAlign: "Center"}}> California Covid-19 Hotspot Map</h1></div>
-     
+
       
-      <form onSubmit={this.handleSubmit}>
-        <div style={{margin:"auto", width:"80%", display:"block", overflow:"auto"}}>
-        
+      
+        <div style={{margin:"auto", textAlign:"center", width:"70%", display:"block", overflow:"auto"}}>
+        <form style={{display: "inline-block"}} onSubmit={this.handleSubmit}>
         
         <div style={{float:"left" }}>
 
-          <select  style={{marginRight:"50px", marginBottom:"25px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
+          <select  style={{marginRight:"40px", marginBottom:"25px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
+
            
             <option value=""  defaultValue >SELECT COUNTY</option>
             {this.state.county.map(x => {
@@ -226,7 +253,9 @@ class App extends React.Component {
 
           </select>
 
-          <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"25px", marginRight:"50px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
+
+          <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"25px", marginRight:"40px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
+
            
             <option value="" defaultValue>SELECT PRISON</option>
             {
@@ -241,28 +270,42 @@ class App extends React.Component {
         
         <div style={{float:"left" }}>
 
-          <input id="myDate" type="date" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"25px", marginRight:"50px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
+
+          <input id="myDate" type="date" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"25px", marginRight:"40px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
       
-          <button style={{ marginBottom:"25px", height:"30px", width:"100px",  marginRight:"50px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}>SUBMIT</button>
+          <button style={{ marginBottom:"25px", height:"30px", width:"100px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}>SUBMIT</button>
 
         </div>
-        </div>
-
         </form>
-       
+        </div>
 
             {this.datetime()}
-        
-            <p>You Chose</p>
-            <p>County: {selectCounty}</p>
-            <p>Prison: {selectPrison}</p>
-            <p>Date: {theDate}</p>
+        {/* change started */}
+            <div id="chosenData" style={{border:"2px solid #393F44", visibility:"hidden", margin:"auto",  width:"50%"}} >
+              {/* end of change */}
+              <p>County: {selectCounty} &emsp;&emsp;  Prison: {selectPrison} &emsp;&emsp;  Date: {theDate}</p>
+             </div>
+
         </div>
 
         <div>
     
           <MyMap />
+
+
+          {/* change started */}
+          <div style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
+                    <span onClick={this.scrollUp.bind(this)}>
+                      <img  alt="Page up" title="Scroll to the top" style={{height:"40px", width:"40px"}} src={icon} />
+                        </span>
+                    </div>
+            
+            <div id="info" style={{visibility:"hidden", paddingBottom:"20px", paddingTop:"20px", textAlign:"left", height:"auto", width: '40%', margin: 'auto', border:"2px solid #393F44 ", marginTop:"60px"}}>             
+            </div>
+            {/* end of change */}
+
       </div>
+      </div>    
 
       </div>    
 
