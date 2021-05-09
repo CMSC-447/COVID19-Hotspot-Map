@@ -4,11 +4,8 @@ import './App.css'
 import icon from './logo192.png'
 
 
-// making todays date accessible to all the methods
-var displaytodaydate;
-var cty;
-var pri;
-var date;
+
+//var date;
 
 // making todays date accessible to all the methods
 var displaytodaydate;
