@@ -17,14 +17,6 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 var datainfo = [];
 
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    iconSize:[20,20],
-    iconAnchor:[5,10],
-    popupAnchor:[5,5]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 class MyMap extends Component {
     constructor () {
