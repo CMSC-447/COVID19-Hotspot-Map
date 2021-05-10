@@ -1,18 +1,17 @@
 import React from "react";
 import MyMap from "./components/mymap";
-import './App.css'
-import icon from './logo192.png'
+import './App.css';
+import icon from './logo192.png';
+import syring from './pls.png';
+import {Link} from 'react-router-dom';
 
 
 
-//var date;
 
 // making todays date accessible to all the methods
 var displaytodaydate;
 var cty;
 var pri;
-
-
 
 class App extends React.Component {
   
@@ -23,10 +22,9 @@ class App extends React.Component {
     this.state = {
       county: [],
       prisons: [],
-      selectCounty:'None',
+      selectCounty:'All',
       selectPrison:'None',
       theDate: '',
-
       pri_uni_ref:[],
     };
 
@@ -65,7 +63,6 @@ class App extends React.Component {
     if (response.ok){
       
       console.log("Connected to backend API from loadDB().");
-      //console.log(data)
     }
     else {
       console.log("Could not connect to backend API from loadDB().");
@@ -124,6 +121,7 @@ class App extends React.Component {
 
   // for the drop down menus
   selectLACounty(event){
+    //console.log(event.target.value)
     
     this.setState({ selectCounty: event.target.value});
 
@@ -147,7 +145,7 @@ class App extends React.Component {
         this.setState({ 
           prisons: [],
           selectPrison: 'None',
-          selectCounty: 'None'
+          selectCounty: 'All'
       });
 
     }
@@ -213,11 +211,11 @@ class App extends React.Component {
   
 
   } 
-   // change started 
+
   scrollUp= ()=>{ 
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
-  // end of change 
+ 
 
  
   render() {  
@@ -227,11 +225,12 @@ class App extends React.Component {
 
     return (
 
+
       <div>   
+
      
       <div>
-        <div > <h1 
-        style = {{textAlign: "Center"}}> California Covid-19 Hotspot Map</h1></div>
+        <div > <h1 style = {{textAlign: "Center"}}> California Covid-19 Hotspot Map</h1></div>
 
       
       
@@ -240,7 +239,7 @@ class App extends React.Component {
         
         <div style={{float:"left" }}>
 
-          <select  style={{marginRight:"40px", marginBottom:"25px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
+          <select  style={{marginRight:"40px", marginBottom:"15px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
 
            
             <option value=""  defaultValue >SELECT COUNTY</option>
@@ -251,7 +250,7 @@ class App extends React.Component {
           </select>
 
 
-          <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"25px", marginRight:"40px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
+          <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"15px", marginRight:"40px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
 
            
             <option value="" defaultValue>SELECT PRISON</option>
@@ -268,20 +267,28 @@ class App extends React.Component {
         <div style={{float:"left" }}>
 
 
-          <input id="myDate" type="date" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"25px", marginRight:"40px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
+          <input id="myDate" type="date" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"15px", marginRight:"40px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
       
-          <button style={{ marginBottom:"25px", height:"30px", width:"100px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}>SUBMIT</button>
+          <button style={{ cursor:"pointer", marginBottom:"15px", height:"30px", width:"100px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}>SUBMIT</button>
 
         </div>
         </form>
         </div>
 
             {this.datetime()}
-        {/* change started */}
-            <div id="chosenData" style={{border:"2px solid #393F44", visibility:"hidden", margin:"auto",  width:"50%"}} >
-              {/* end of change */}
+            <div style={{ textAlign:"center", margin:"auto", width:"70%", overflow:"auto"}} >
+            <div id="chosenData" style={{margin:"10px", width:"85%", float:"left", border:"2px solid #393F44", visibility:"visible"}} >
+             
               <p>County: {selectCounty} &emsp;&emsp;  Prison: {selectPrison} &emsp;&emsp;  Date: {theDate}</p>
              </div>
+             
+             
+             <Link to="/vaccine"><div style={{borderRadius:"8px", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)", backgroundColor:"#D8D9DA", float:"right", padding:"8px", margin:"10px", cursor:"pointer"}} >
+            <img alt="Vaccine info" title="Get vaccine info" style={{width:"40px", height:"40px", align:"center", verticalAlign:"middle"}} src={syring}/>
+            </div>
+            </Link>
+            </div>
+
 
         </div>
 
@@ -290,20 +297,19 @@ class App extends React.Component {
           <MyMap />
 
 
-          {/* change started */}
+     
           <div style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
                     <span onClick={this.scrollUp.bind(this)}>
-                      <img  alt="Page up" title="Scroll to the top" style={{height:"40px", width:"40px"}} src={icon} />
+                      <img alt="Page up" title="Scroll to the top" style={{cursor:"pointer", height:"40px", width:"40px"}} src={icon} />
                         </span>
                     </div>
             
             <div id="info" style={{visibility:"hidden", paddingBottom:"20px", paddingTop:"20px", textAlign:"left", height:"auto", width: '40%', margin: 'auto', border:"2px solid #393F44 ", marginTop:"60px"}}>             
             </div>
-            {/* end of change */}
+      
 
       </div>
       </div>    
-
    
 
     );
