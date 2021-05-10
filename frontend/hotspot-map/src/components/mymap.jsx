@@ -6,6 +6,7 @@ import L from 'leaflet'
 import data from './../data/markers.json'
 import icon from './marker.png';
 
+
 let DefaultIcon = L.icon({
     iconUrl: icon,
     iconSize:[20,20],
@@ -23,8 +24,6 @@ class MyMap extends Component {
         super();
         this.state = {
             locations:[],
-
-      
             hovered:false,
             check:false,   
 
@@ -39,6 +38,7 @@ class MyMap extends Component {
             window.scrollTo(0, 0);
           }
         // arrange data for marking and popups
+        datainfo = [];
         for (var i = 0; i < data.length; i++) {
             this.state.locations.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county});
@@ -77,7 +77,7 @@ class MyMap extends Component {
         
         layer.bindTooltip(`${countyName}`); // county name display.
 
-        //change started 
+   
         layer.on('click', function (e) {
             document.getElementById("info").style.visibility = "visible";
             document.getElementById("info").innerHTML = `<h2 style='text-align:center'>${countyName}</h2><strong style='padding-left:15px'>Prisons:</strong><br>`;
@@ -94,9 +94,10 @@ class MyMap extends Component {
             }            
 
             if(exist){
-                for(i = 0; i < datainfo.length; i++ ){
-                    if(datainfo[i].county === `${countyName}`){
-                        document.getElementById("info").innerHTML += "<li style='padding-left:25px'>" + datainfo[i].name + "  (City: " + datainfo[i].city + ")</li>" ;
+                
+                for(var j = 0; j < datainfo.length; j++ ){
+                    if(datainfo[j].county === `${countyName}`){
+                        document.getElementById("info").innerHTML += "<li style='padding-left:25px'>" + datainfo[j].name + "  (City: " + datainfo[j].city + ")</li>" ;
                     }
                 }
             }
@@ -105,6 +106,7 @@ class MyMap extends Component {
             else{
                 document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>" ;
             }
+
             var elmnt = document.getElementById("info");
             elmnt.scrollIntoView({behavior: "smooth"});
         
@@ -136,12 +138,22 @@ class MyMap extends Component {
 
 
     prisonPrint = (e) =>{
+
+
+        
+        document.getElementById("info").style.visibility = "visible";
+        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>" 
+        var index = 0;
+        for(var i =0; i< datainfo.length; i++){
+            if(datainfo[i].name === e.target.options.children.props.children[1]){
+                index = i;
+
+            }
+        }
+        document.getElementById("info").innerHTML += "<strong style='padding-Left: 10px'>County: </strong>" + datainfo[index].county  + "<br> <strong style='padding-Left: 10px'>City:</strong>" + datainfo[index].city;
+
         var elmnt = document.getElementById("info");
         elmnt.scrollIntoView({behavior: "smooth"});
-        document.getElementById("info").style.visibility = "visible";
-        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>"
-        
-     
     }
 
   
