@@ -4,7 +4,7 @@ import county_ca from './../data/county_ca.json'
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet'
 import data from './../data/markers.json'
-import icon from './marker.png';
+import icon from './blue-pin.png';
 
 
 let DefaultIcon = L.icon({

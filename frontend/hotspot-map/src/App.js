@@ -1,8 +1,8 @@
 import React from "react";
 import MyMap from "./components/mymap";
 import './App.css';
-import icon from './logo192.png';
-import syring from './pls.png';
+import icon from './components/logo192.png';
+import syring from './components/pls.png';
 import {Link} from 'react-router-dom';
 
 
@@ -84,6 +84,28 @@ class App extends React.Component {
     return data;
   }
 
+  async getTotalPrisonCases() {
+    const response = await fetch('/getTotalPrisonCases');
+
+    if (response.ok){
+      console.log("Connected to backend API from getTotalPrisonCases().");
+    }
+    else {
+      console.log("Could not connect to backend API from getTotalPrisonCases().");
+    }
+  }
+
+  async getTotalCountyCases() {
+    const response = await fetch('/getTotalCountyCases');
+
+    if (response.ok){
+      console.log("Connected to backend API from getTotalCountyCases().");
+    }
+    else {
+      console.log("Could not connect to backend API from getTotalCountyCases().");
+    }
+  }
+
   async getData() {
     const response = await fetch('/getData/' + this.state.pri_uni_ref + " " + this.state.theDate);
     const data = await response.json();
@@ -104,6 +126,8 @@ class App extends React.Component {
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
+    this.getTotalPrisonCases();
+    this.getTotalCountyCases();
 
 
 

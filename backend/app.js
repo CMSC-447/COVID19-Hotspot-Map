@@ -53,6 +53,39 @@ app.get('/get_prisons', (req, res) => {
 
 });
 
+app.get('/getTotalPrisonCases', (req, res) => {
+  let sql = "SELECT * FROM total_pri_data;";
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      const fs = require('fs')
+      try {
+        fs.writeFileSync('../frontend/hotspot-map/src/data/total_pri_data.json', JSON.stringify(results))
+      } catch (error) {
+        console.error(error)
+      }
+      console.log("Successfully loaded prison and locations! returning back to getTotalPrisonCases()");
+  });
+});
+
+app.get('/getTotalCountyCases', (req, res) => {
+  let sql = "SELECT * FROM total_county_data;";
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      const fs = require('fs')
+      try {
+        fs.writeFileSync('../frontend/hotspot-map/src/data/total_county_data.json', JSON.stringify(results))
+      } catch (error) {
+        console.error(error)
+      }
+      console.log("Successfully loaded prison and locations! returning back to getTotalCountyCases()");
+  });
+
+});
+
 app.get('/getData/:val', (req, res) => {
 
   var qname = req.params.val || "";
