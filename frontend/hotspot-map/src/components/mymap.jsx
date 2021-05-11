@@ -4,6 +4,8 @@ import county_ca from './../data/county_ca.json'
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet'
 import data from './../data/markers.json'
+import prison_data from './../data/total_pri_data.json'
+import county_data from './../data/total_county_data.json'
 import icon from './blue-pin.png';
 
 
