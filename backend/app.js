@@ -47,7 +47,7 @@ app.get('/get_prisons', (req, res) => {
       } catch (error) {
         console.error(error)
       }
-      console.log("Successfully loaded prison and locations! returning back to getPrison()");
+      console.log("Successfully loaded prison locations! returning back to getPrison()");
       res.send(results);
   });
 
@@ -65,7 +65,7 @@ app.get('/getTotalPrisonCases', (req, res) => {
       } catch (error) {
         console.error(error)
       }
-      console.log("Successfully loaded prison and locations! returning back to getTotalPrisonCases()");
+      console.log("Successfully loaded total prison cases! returning back to getTotalPrisonCases()");
   });
 });
 
@@ -81,12 +81,12 @@ app.get('/getTotalCountyCases', (req, res) => {
       } catch (error) {
         console.error(error)
       }
-      console.log("Successfully loaded prison and locations! returning back to getTotalCountyCases()");
+      console.log("Successfully total loaded county cases! returning back to getTotalCountyCases()");
   });
 
 });
 
-app.get('/getData/:val', (req, res) => {
+app.get('/getPrisonData/:val', (req, res) => {
 
   var qname = req.params.val || "";
   qname = qname.split(" ");
@@ -98,7 +98,26 @@ app.get('/getData/:val', (req, res) => {
       if (err) {
           return console.error('error: ' + err.message);
       }
-      console.log(" Successfully fetched dates! returning back to getStartEnd()!");
+      console.log(" Successfully fetched dates! returning back to getPrisonData()!");
+
+      res.send(results);
+  });
+
+});
+
+app.get('/getCountyData/:val', (req, res) => {
+
+  var qname = req.params.val || "";
+  qname = qname.split(" ");
+  console.log(qname);
+
+  let sql = "SELECT * FROM county_" + qname[0] + " WHERE date='" + qname[1]+"'";
+  console.log(sql);
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      console.log(" Successfully fetched dates! returning back to getCountyData()!");
 
       res.send(results);
   });
