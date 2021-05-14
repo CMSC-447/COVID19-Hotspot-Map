@@ -124,6 +124,7 @@ app.get('/getCountyData/:val', (req, res) => {
 
 });
 
+
 // app.get("/load-db",(req, res) => {
 //   let sql = "SELECT * FROM prison_data;";
 //   db.query(sql,(err, results) => {
