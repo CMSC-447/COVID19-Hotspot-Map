@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import {Marker, MapContainer, GeoJSON, TileLayer, Tooltip} from "react-leaflet"
-import county_ca from './../data/county_ca.json'
+import {Marker, MapContainer, GeoJSON, TileLayer, Tooltip} from "react-leaflet";
+import county_ca from './../data/county_ca.json';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet'
-import data from './../data/markers.json'
-import prison_data from './../data/total_pri_data.json'
-import county_data from './../data/total_county_data.json'
+import L from 'leaflet';
+import data from './../data/markers.json';
 import icon from './blue-pin.png';
+import county_data from './../data/total_county_data.json';
+import prison_data from './../data/total_pri_data.json';
+
 
 
 let DefaultIcon = L.icon({
@@ -34,6 +35,8 @@ class MyMap extends Component {
 
     componentDidMount() {
 
+       // console.log(county_data[1].conf_cases);
+
         window.onbeforeunload = function () {
             window.scrollTo(0, 0);
           }
@@ -42,10 +45,8 @@ class MyMap extends Component {
         for (var i = 0; i < data.length; i++) {
             this.state.locations.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county});
-            datainfo.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
+            datainfo.push({"name":data[i].p_name, "uni_ref": data[i].uni_ref, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county});
-
-            
         }
 
 
@@ -65,19 +66,18 @@ class MyMap extends Component {
         fillColor: "blue",
         fillOpacity: .6,
         color: "black",
-        weight:0.6,
+        weight:.6,
+
     };
 
    
     onEachCounty = (county, layer) =>{
         
-        
         const countyName = county.properties.NAME;
 
-        
         layer.bindTooltip(`${countyName}`); // county name display.
 
-   
+
         layer.on('click', function (e) {
             document.getElementById("info").style.visibility = "visible";
             document.getElementById("info").innerHTML = `<h2 style='text-align:center'>${countyName}</h2><strong style='padding-left:15px'>Prisons:</strong><br>`;
@@ -90,29 +90,29 @@ class MyMap extends Component {
                 if(datainfo[i].county === `${countyName}`){
                     exist = true;
                 }
-
             }            
 
             if(exist){
-                
                 for(var j = 0; j < datainfo.length; j++ ){
                     if(datainfo[j].county === `${countyName}`){
-                        document.getElementById("info").innerHTML += "<li style='padding-left:25px'>" + datainfo[j].name + "  (City: " + datainfo[j].city + ")</li>" ;
+                        document.getElementById("info").innerHTML += "<li style='padding-left:25px'>" + datainfo[j].name + "  (City: " + datainfo[j].city + ")</li>";
+            
                     }
                 }
-            }
-           
-                    
+            }       
             else{
-                document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>" ;
+                document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>"
+            }
+
+            for(var k = 0; k < Object.keys(county_data).length; k++){
+                if(county_data[k].county === `${countyName}`){
+                    document.getElementById("info").innerHTML +=  "<h3 style='text-align:center'>County Covid Data</h3><strong style='padding-Left: 10px'>Total Cases: </strong>" + county_data[k].conf_cases + "<br> <strong style='padding-Left: 10px'>Total Deaths: </strong>" + county_data[k].conf_deaths;
+                }
             }
 
             var elmnt = document.getElementById("info");
             elmnt.scrollIntoView({behavior: "smooth"});
-        
-
           });
-
 
         if(county.properties.COUNTYFP > 34){
             layer.options.fillColor = "yellow"
@@ -136,22 +136,29 @@ class MyMap extends Component {
         }
     }
 
-
     prisonPrint = (e) =>{
 
-
-        
         document.getElementById("info").style.visibility = "visible";
-        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>" 
+        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>" ;
         var index = 0;
+        
         for(var i =0; i< datainfo.length; i++){
             if(datainfo[i].name === e.target.options.children.props.children[1]){
                 index = i;
-
             }
         }
-        document.getElementById("info").innerHTML += "<strong style='padding-Left: 10px'>County: </strong>" + datainfo[index].county  + "<br> <strong style='padding-Left: 10px'>City:</strong>" + datainfo[index].city;
+        document.getElementById("info").innerHTML += "<strong style='padding-Left: 10px'>County: </strong>" + datainfo[index].county  + "<br> <strong style='padding-Left: 10px'>City:</strong> " + datainfo[index].city;
 
+        document.getElementById("info").innerHTML +=  "<h3 style='text-align:center'>Prison Covid Data<h3>";
+        for(var k = 0; k < Object.keys(prison_data).length; k++){
+            
+            if(datainfo[index].uni_ref === prison_data[k].uni_ref ){
+                console.log("data array id", datainfo[index].uni_ref)
+                console.log("new file", datainfo[index].uni_ref)
+                document.getElementById("info").innerHTML +=  "<strong style='padding-Left: 10px'>Total Cases: </strong>" + prison_data[k].conf_cases;
+                document.getElementById("info").innerHTML +=  "<br> <strong style='padding-Left: 10px'>Total Deaths: </strong>" + prison_data[k].conf_deaths;
+            }
+        }
         var elmnt = document.getElementById("info");
         elmnt.scrollIntoView({behavior: "smooth"});
     }
@@ -194,7 +201,7 @@ class MyMap extends Component {
                             },
                           }}
                         key={`marker-${idx}`} position={location.position}>
-
+                            
                             <Tooltip>
                                 <span>
                                     Prison: &nbsp;
@@ -211,10 +218,11 @@ class MyMap extends Component {
                                 </Tooltip>
                         </Marker>
                     )}
+                    
 
                 </MapContainer>
 
-                
+
                 
             </div>
         );
