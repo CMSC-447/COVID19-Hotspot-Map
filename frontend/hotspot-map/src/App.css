@@ -10,3 +10,34 @@ body {
   font-family: Arial;
   text-align: center;
 }
+
+#info_chart{
+  width:390px;
+  padding: 20px 0 0 20px;
+}
+
+.vac_btn{
+  border-radius:10px;
+  background-color:#D8D9DA;
+}
+.vac_btn:hover{
+  background-color: #C3C1C1;
+}
+
+.home_btn{
+  background-color:#D8D9DA;
+
+}
+.home_btn:hover{
+  background-color:#C3C1C1;
+
+}
+
+.sbmt_btn{
+  background-color:#393F44;
+
+}
+.sbmt_btn:hover{
+  background-color:black;
+
+}
