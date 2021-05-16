@@ -1,23 +1,11 @@
 import React, { Component } from 'react';
-import {Marker, MapContainer, GeoJSON, TileLayer, Tooltip} from "react-leaflet";
+import { MapContainer, GeoJSON, TileLayer, Tooltip, CircleMarker} from "react-leaflet";
 import county_ca from './../data/county_ca.json';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import data from './../data/markers.json';
-import icon from './blue-pin.png';
 import county_data from './../data/total_county_data.json';
 import prison_data from './../data/total_pri_data.json';
 
-
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    iconSize:[20,20],
-    iconAnchor:[5,10],
-    popupAnchor:[5,5]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 var datainfo = [];
 
@@ -49,6 +37,19 @@ class MyMap extends Component {
             "city":data[i].city, "county":data[i].county});
         }
 
+        for (var k = 0; k < 58; k++) {
+            var nm = county_ca.features[k].properties.NAME;
+
+            for (var j = 0; j < 58; j++) {
+
+                if (county_data[j].county === nm) {
+                    county_ca.features[k].properties.COUNTYFP = county_data[j].conf_cases
+                }
+            
+            }
+
+        }
+
 
     }
 
@@ -63,7 +64,7 @@ class MyMap extends Component {
     };
 
     countyStyle = {
-        fillColor: "blue",
+        fillColor: "grey",
         fillOpacity: .6,
         color: "black",
         weight:.6,
@@ -71,7 +72,7 @@ class MyMap extends Component {
     };
 
    
-    onEachCounty = (county, layer) =>{
+    onEachCounty = (county, layer) => {
         
         const countyName = county.properties.NAME;
 
@@ -100,7 +101,7 @@ class MyMap extends Component {
                     }
                 }
             }       
-            else{
+            else {
                 document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>"
             }
 
@@ -114,9 +115,22 @@ class MyMap extends Component {
             elmnt.scrollIntoView({behavior: "smooth"});
           });
 
-        if(county.properties.COUNTYFP > 34){
-            layer.options.fillColor = "yellow"
+        if(county.properties.COUNTYFP < 10) {
+            layer.options.fillColor = "#FAF3AD"
         }
+        else if(county.properties.COUNTYFP < 1000) {
+            layer.options.fillColor = "#F3CC71"
+        }
+        else if(county.properties.COUNTYFP < 10000) {
+            layer.options.fillColor = "#EEAE33"
+        }
+        else if(county.properties.COUNTYFP < 100000) {
+            layer.options.fillColor = "#DD7225"
+        }
+        else {
+            layer.options.fillColor = "#B4461F"
+        }
+
     };
 
 
@@ -138,12 +152,14 @@ class MyMap extends Component {
 
     prisonPrint = (e) =>{
 
+        console.log(e)
+
         document.getElementById("info").style.visibility = "visible";
-        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target.options.children.props.children[1] + "<h2>" ;
+        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target._tooltip.options.children[1] + "<h2>" ;
         var index = 0;
         
         for(var i =0; i< datainfo.length; i++){
-            if(datainfo[i].name === e.target.options.children.props.children[1]){
+            if(datainfo[i].name === e.target._tooltip.options.children[1]){
                 index = i;
             }
         }
@@ -191,39 +207,40 @@ class MyMap extends Component {
 
                     {this.state.locations.map((location,idx) => 
 
+                    <CircleMarker
+                    eventHandlers={{ 
+                        click: (e) => {
+                        this.prisonPrint(e)   
+                        },
+                        }}
+                        
+                        key={`marker-${idx}`}
+                        center={location.position}
+                        fillOpacity={0.5}
+                        color="black"
+                        fillColor={this.getColor(1)}
 
-                        // marker and detailed display.
-                        <Marker 
-                        eventHandlers={{
-                            click: (e) => {
-                              this.prisonPrint(e)
-                            
-                            },
-                          }}
-                        key={`marker-${idx}`} position={location.position}>
-                            
+                        >
                             <Tooltip>
                                 <span>
                                     Prison: &nbsp;
-                                </span>
-                                {location.name}
-                                <span><br />
+                                 </span>
+                                 {location.name}
+                                 <span><br />
                                     County: &nbsp;
-                                </span>
-                                {location.county}
-                                <span><br />
+                                 </span>
+                                 {location.county}
+                                 <span><br />
                                     City: &nbsp;
-                                </span>
-                                {location.city}
-                                </Tooltip>
-                        </Marker>
+                                 </span>
+                                 {location.city}
+                           </Tooltip>
+                        </CircleMarker>
                     )}
                     
 
                 </MapContainer>
 
-
-                
             </div>
         );
     }

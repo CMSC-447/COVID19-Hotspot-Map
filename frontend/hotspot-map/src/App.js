@@ -4,7 +4,7 @@ import './App.css';
 import icon from './components/logo192.png';
 import syring from './components/pls.png';
 import {Link} from 'react-router-dom';
-import QueueDisplay from './chart.js'
+//import QueueDisplay from './chart.js'
 import county_data from './data/total_county_data.json';
 import prison_data from './data/total_pri_data.json';
 import marker_data from './data/markers.json';
@@ -14,6 +14,7 @@ var displaytodaydate;
 //var latestDataDate = "2021-05-03"
 var cty;
 var pri;
+var vac;
 var data = {}
 
 class App extends React.Component {
@@ -101,6 +102,20 @@ class App extends React.Component {
     }
   }
 
+  async getVacLoc() {
+    const response = await fetch('/getVacLoc');
+    const data = await response.json();
+
+    if (response.ok){
+      console.log("Connected to backend API from getVacLoc().");
+    }
+    else {
+      console.log("Could not connect to backend API from getVacLoc().");
+    }
+
+    return data;
+  }
+
   async getTotalCountyCases() {
     const response = await fetch('/getTotalCountyCases');
 
@@ -147,6 +162,13 @@ class App extends React.Component {
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
+    vac = this.getVacLoc();
+
+    vac.then( result => {
+      console.log("locations", vac);
+    });
+    
+
     this.getTotalPrisonCases();
     this.getTotalCountyCases();
 
@@ -265,7 +287,7 @@ class App extends React.Component {
    } 
 
 
-  inputValidate(valiData){
+  inputValidate(valiData) {
     var total_deaths = 0;
     var total_cases = 0;
     var pri_cases = 0;

@@ -112,7 +112,7 @@ app.get('/getCountyData/:val', (req, res) => {
   console.log(qname);
 
   let sql = "SELECT * FROM county_" + qname[0] + " WHERE date='" + qname[1]+"'";
-  console.log(sql);
+
   db.query(sql,(err, results) => {
       if (err) {
           return console.error('error: ' + err.message);
@@ -120,6 +120,18 @@ app.get('/getCountyData/:val', (req, res) => {
       console.log(" Successfully fetched dates! returning back to getCountyData()!");
 
       res.send(results);
+  });
+
+});
+
+app.get("/getVacLoc",(req, res) => {
+  let sql = "SELECT * FROM vaccine_loc;";
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      console.log("Successfully fetched vaccine spots! returning back to getVacLoc()!")
+      res.send(results)
   });
 
 });
