@@ -37,7 +37,7 @@ class MyMap extends Component {
 
     componentDidMount() {
 
-       // console.log(county_data[1].conf_cases);
+       console.log(county_data[1].conf_cases);
 
         window.onbeforeunload = function () {
             window.scrollTo(0, 0);
@@ -208,7 +208,6 @@ class MyMap extends Component {
         var elmnt = document.getElementById("scroll_up");
         elmnt.scrollIntoView({behavior: "smooth"});
     }
-
   
     render() {
         const {check} = this.state; 
@@ -270,9 +269,6 @@ class MyMap extends Component {
                     
 
                 </MapContainer>
-
-
-                
             </div>
         );
     }
