@@ -2,12 +2,24 @@ import React, { Component } from 'react';
 import { MapContainer, GeoJSON, TileLayer, Tooltip, CircleMarker} from "react-leaflet";
 import county_ca from './../data/county_ca.json';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import data from './../data/markers.json';
+import icon from './blue-pin.png';
 import county_data from './../data/total_county_data.json';
 import prison_data from './../data/total_pri_data.json';
 import county_spec_data from './../data/county_spec_data.json';
 import pri_spec_data from './../data/pri_spec_data.json';
 
+
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    iconSize:[20,20],
+    iconAnchor:[5,10],
+    popupAnchor:[5,5]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 var datainfo = [];
 
@@ -33,10 +45,10 @@ class MyMap extends Component {
         // arrange data for marking and popups
         datainfo = [];
         for (var i = 0; i < data.length; i++) {
+
             datainfo.push({"name":data[i].p_name, "uni_ref": data[i].uni_ref, "position": [data[i].latitude, data[i].longitude], 
             "city":data[i].city, "county":data[i].county, "cases":0});
         }
-
         for (var u = 0; u < datainfo.length; u++) {
             for (var v = 0; v < pri_spec_data.length; v++) {
                 if (datainfo[u].name === pri_spec_data[v].p_name) {
@@ -44,29 +56,28 @@ class MyMap extends Component {
                 }
 
             }
-        }
 
-        // set the state (If state is not saved, will causes problems)
+
+        }
         this.setState({locations:datainfo});
 
-        // Updating COUNTYFP VALUES FOR SHADING.
         for (var m = 0; m < 58; m++) {
             county_ca.features[m].properties.COUNTYFP = 0
-        }
-
-        for (var k = 0; k < 58; k++) {
-            var nm = county_ca.features[k].properties.NAME;
-            for (var j = 0; j < county_spec_data.length; j++) {
-                if (county_spec_data[j].county === nm) {
-                    county_ca.features[k].properties.COUNTYFP = county_spec_data[j].cases
-                }
-            }
-        }
 
     }
 
-    getColor = (n) => {
+    for (var k = 0; k < 58; k++) {
+        var nm = county_ca.features[k].properties.NAME;
+        for (var j = 0; j < county_spec_data.length; j++) {
+            if (county_spec_data[j].county === nm) {
+                county_ca.features[k].properties.COUNTYFP = county_spec_data[j].cases
+            }
+        }
+    }
 
+    }
+    getColor = (n) => {
+ 
         if(n < 2) {
             return "#CFEBF7"
         }
@@ -82,7 +93,7 @@ class MyMap extends Component {
         else {
             return "#0C2533"
         }
-    
+
     };
 
     countyStyle = {
@@ -94,7 +105,7 @@ class MyMap extends Component {
     };
 
    
-    onEachCounty = (county, layer) => {
+    onEachCounty = (county, layer) =>{
         
         const countyName = county.properties.NAME;
 
@@ -123,7 +134,7 @@ class MyMap extends Component {
                     }
                 }
             }       
-            else {
+            else{
                 document.getElementById("info").innerHTML += "<span style='padding-left:25px'>No prisons to show<span>"
             }
 
@@ -133,9 +144,9 @@ class MyMap extends Component {
                 }
             }
 
-            var elmnt = document.getElementById("info");
+            var elmnt = document.getElementById("scroll_up");
             elmnt.scrollIntoView({behavior: "smooth"});
-        });
+          });
 
         if(county.properties.COUNTYFP < 10) {
             layer.options.fillColor = "#FAF3AD"
@@ -152,12 +163,10 @@ class MyMap extends Component {
         else {
             layer.options.fillColor = "#B4461F"
         }
-        
-
     };
 
 
-    handlecheck = (event) => {
+    handlecheck = (event) =>{
        
         if(document.getElementById('chkbx').checked){
             this.setState({
@@ -196,7 +205,7 @@ class MyMap extends Component {
                 document.getElementById("info").innerHTML +=  "<br> <strong style='padding-Left: 10px'>Total Deaths: </strong>" + prison_data[k].conf_deaths;
             }
         }
-        var elmnt = document.getElementById("info");
+        var elmnt = document.getElementById("scroll_up");
         elmnt.scrollIntoView({behavior: "smooth"});
     }
 
@@ -216,7 +225,7 @@ class MyMap extends Component {
                 
                 style = {{border:"2px solid #393F44", height: "72vh", width: '70%', margin: 'auto'}} zoom = {6} center = {[37.5, -120]} scrollWheelZoom = {true}>
                     <GeoJSON style = {this.countyStyle} data ={county_ca.features} onEachFeature={this.onEachCounty} 
-                    onMouseMove={this.handleMove} onMouseLeave={this.handleLeave}  />
+                    onMouseMove={this.handleMove} onMouseLeave={this.handleLeave} />
                  
                  
                  
@@ -226,38 +235,44 @@ class MyMap extends Component {
                     />):("")}
 
 
-                    {this.state.locations.map((location,idx=0) => 
+                        {this.state.locations.map((location,idx=0) =>  
 
-                    <CircleMarker
-                    eventHandlers={{ click: (e) => {this.prisonPrint(e)}, }}
 
-                        key={`marker-${idx}`}
-                        center={location.position}
-                        fillOpacity={1.0}
-                        color="blue"
-                        weight={0.5}
-                        fillColor={this.getColor(this.state.locations[idx].cases)}
-                        >
+                        // marker and detailed display.
+                        <CircleMarker
+                        eventHandlers={{ click: (e) => {this.prisonPrint(e)}, }}
+
+    
+                            key={`marker-${idx}`}
+                            center={location.position}
+                            fillOpacity={1.0}
+                            color="blue"
+                            weight={0.5}
+                            fillColor={this.getColor(this.state.locations[idx].cases)}
+    
+                            >
                             <Tooltip>
                                 <span>
                                     Prison: &nbsp;
-                                 </span>
-                                 {location.name}
-                                 <span><br />
+                                </span>
+                                {location.name}
+                                <span><br />
                                     County: &nbsp;
-                                 </span>
-                                 {location.county}
-                                 <span><br />
+                                </span>
+                                {location.county}
+                                <span><br />
                                     City: &nbsp;
-                                 </span>
-                                 {location.city}
-                           </Tooltip>
-                        </CircleMarker>
+                                </span>
+                                {location.city}
+                                </Tooltip>
+                                </CircleMarker>
                     )}
                     
 
                 </MapContainer>
 
+
+                
             </div>
         );
     }
