@@ -13,15 +13,14 @@ const db = mysql.createConnection({
   password: 'password'
 })
 
-// connect to the db
+
+// db connect
 db.connect( err => {
   if(err) {
       return console.error('error: ' + err.message);
   }
   console.log('MySQL Connected.')
 })
-
-
 app.get('/load_counties', (req, res) => {
   let sql = "SELECT * FROM cal_counties;";
   db.query(sql,(err, results) => {
@@ -213,3 +212,5 @@ app.listen('9000',() => {
 });
 
 module.exports = app;
+
+
