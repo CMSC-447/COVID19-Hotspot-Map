@@ -183,6 +183,12 @@ app.get("/getVacLoc",(req, res) => {
       if (err) {
           return console.error('error: ' + err.message);
       }
+      const fs = require('fs')
+      try {
+        fs.writeFileSync('../frontend/hotspot-map/src/data/vaccine_location.json', JSON.stringify(results))
+      } catch (error) {
+        console.error(error)
+      }
       console.log("Successfully fetched vaccine spots! returning back to getVacLoc()!")
       res.send(results)
   });
