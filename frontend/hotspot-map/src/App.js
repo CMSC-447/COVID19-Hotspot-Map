@@ -4,10 +4,11 @@ import './App.css';
 import icon from './components/logo192.png';
 import syring from './components/pls.png';
 import {Link} from 'react-router-dom';
-//import QueueDisplay from './chart.js'
 import county_data from './data/total_county_data.json';
 import prison_data from './data/total_pri_data.json';
 import marker_data from './data/markers.json';
+import Bchart from './chart_county.js';
+import Bachart from './chart_prison.js';
 
 // making todays date accessible to all the methods
 var displaytodaydate;
@@ -101,7 +102,6 @@ class App extends React.Component {
       console.log("Could not connect to backend API from getTotalPrisonCases().");
     }
   }
-
   async getVacLoc() {
     const response = await fetch('/getVacLoc');
     const data = await response.json();
@@ -147,7 +147,7 @@ class App extends React.Component {
       this.state.theDate = '2021-05-03';
     }
     const response = await fetch('/AllCountyData/' + this.state.theDate);
-  
+
     if (response.ok){
       console.log("Connected to backend API from AllCountyData().");
     }
@@ -159,7 +159,7 @@ class App extends React.Component {
   async AllPrisonData() {
 
     const response = await fetch('/AllPrisonData/' + this.state.theDate);
-  
+
     if (response.ok){
       console.log("Connected to backend API from AllPrisonData().");
     }
@@ -167,6 +167,7 @@ class App extends React.Component {
       console.log("Could not connect to backend API from AllPrisonData().");
     }
   }
+
   
   async getCountyData() {
       const response = await fetch('/getCountyData/' + this.state.cty_uni_ref + " " + this.state.theDate);
@@ -184,21 +185,16 @@ class App extends React.Component {
     }
 
 
-
   async componentDidMount() {
-    this.AllCountyData();
-    this.AllPrisonData();
     cty = this.loadCounties();
     pri = this.getPrison();
     vac = this.getVacLoc();
-
-    
+    this.AllCountyData();
+    this.AllPrisonData();
 
     vac.then( result => {
-      //console.log("locations", vac);
+      console.log("locations", vac);
     });
-    
-
     this.getTotalPrisonCases();
     this.getTotalCountyCases();
 
@@ -253,7 +249,6 @@ class App extends React.Component {
         }
     
         this.setState({cty_uni_ref: uni_ref});
-  
       }
       else {
         this.setState({ 
@@ -307,7 +302,8 @@ class App extends React.Component {
   }
 
   handleSubmit=(event) =>{
-    document.getElementById("error").innerHTML = "";
+    document.getElementById("error").innerHTML = "Scroll down for more information";
+    document.getElementById("error").style.color = "green";
     document.getElementById("chosenData").style.visibility = "visible";
     event.preventDefault()
     data = this.state;
@@ -317,7 +313,7 @@ class App extends React.Component {
    } 
 
 
-  inputValidate(valiData) {
+  inputValidate(valiData){
     var total_deaths = 0;
     var total_cases = 0;
     var pri_cases = 0;
@@ -331,19 +327,20 @@ class App extends React.Component {
     var cty_deaths = 0;
 
     if(valiData.selectCounty === 'All'){
-      if(valiData.theDate){
-        document.getElementById("error").innerHTML = "You must choose a county, or both, a county and a prison";
-      }
-      else{
+      // if(valiData.theDate){
+        // document.getElementById("error").style.color = "red";
+        // document.getElementById("error").innerHTML = "You must choose a county, or both, a county and a prison";
+      // }
+      // else{
         console.log("All county")
         console.log(valiData.theDate);
         for(var i = 0; i < 58; i++){
           total_cases  += county_data[i].conf_cases;
           total_deaths  += county_data[i].conf_deaths;
   
-        }
+        // }
         document.getElementById("info").style.visibility = "visible";
-        document.getElementById("info").innerHTML = "<h2 style='text-align:center'>California</h2><h3 style='text-align:center'>03/10/2020 - 05/03/2021</h3><strong style='padding-left:15px'>Confirmed Cases:</strong> " + total_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths </strong>" + total_deaths;
+        document.getElementById("info").innerHTML = "<h2 style='text-align:center;'>California</h2><h3 style='text-align:center'>03/10/2020 - 05/03/2021</h3><strong style='padding-left:15px'>Confirmed Cases:</strong> " + total_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths </strong>" + total_deaths;
   
 
       }
@@ -353,6 +350,7 @@ class App extends React.Component {
       if(valiData.theDate){
         var cty_data = this.getCountyData();
         cty_data.then(function(result) {
+  
           if (result.length) {
             document.getElementById("info").style.visibility = "visible";
             cty_cases = result[0].new_cases;
@@ -363,27 +361,26 @@ class App extends React.Component {
           } else {
             document.getElementById("error").innerHTML = "Data not found for the selected date.";
           }
-         
-
         });
         
       }
-      else {
+      else{
         document.getElementById("info").style.visibility = "visible";
         for(var j = 0; j < 58; j++){
           if(data.selectCounty === county_data[j].county){
             document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + county_data[j].conf_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + county_data[j].conf_deaths;
 
           }
+
         }
       }
      
     }
-    else {
-
+    else{
       if(data.theDate){
         var pri_data = this.getPrisonData();
         pri_data.then(function(result) {
+
           if (result.length) {
             document.getElementById("info").style.visibility = "visible";
             pri_cases = result[0].conf_cases;
@@ -496,14 +493,11 @@ class App extends React.Component {
 
 
         </div>
-
         <div>
     
           <MyMap />
 
-
-     
-          <div style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
+          <div id="scroll_up" style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
                     <span onClick={this.scrollUp.bind(this)}>
                       <img alt="Page up" title="Scroll to the top" style={{cursor:"pointer", height:"40px", width:"40px"}} src={icon} />
                         </span>
@@ -513,6 +507,17 @@ class App extends React.Component {
             <div id="info" style={{visibility:"hidden", paddingBottom:"20px", paddingTop:"20px", textAlign:"left", height:"auto", width: '40%', margin: 'auto', border:"2px solid #393F44 ", marginTop:"60px"}}>
              
             </div>
+
+            <div style={{margin:"auto", width:"85%", paddingTop: "100px"}} id="info_chart">
+              <Bachart/>
+
+            </div>
+            <div style={{margin:"auto", width:"85%", paddingTop: "100px"}} id="info_chart">
+              <Bchart/>
+
+            </div>
+
+      
       </div>
       </div>    
    
