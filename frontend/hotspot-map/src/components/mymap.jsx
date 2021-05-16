@@ -5,14 +5,16 @@ import 'leaflet/dist/leaflet.css';
 import data from './../data/markers.json';
 import county_data from './../data/total_county_data.json';
 import prison_data from './../data/total_pri_data.json';
+import county_spec_data from './../data/county_spec_data.json';
+import pri_spec_data from './../data/pri_spec_data.json';
 
 
 var datainfo = [];
 
 
 class MyMap extends Component {
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
         this.state = {
             locations:[],
             hovered:false,
@@ -31,34 +33,54 @@ class MyMap extends Component {
         // arrange data for marking and popups
         datainfo = [];
         for (var i = 0; i < data.length; i++) {
-            this.state.locations.push({"name":data[i].p_name, "position": [data[i].latitude, data[i].longitude], 
-            "city":data[i].city, "county":data[i].county});
             datainfo.push({"name":data[i].p_name, "uni_ref": data[i].uni_ref, "position": [data[i].latitude, data[i].longitude], 
-            "city":data[i].city, "county":data[i].county});
+            "city":data[i].city, "county":data[i].county, "cases":0});
+        }
+
+        for (var u = 0; u < datainfo.length; u++) {
+            for (var v = 0; v < pri_spec_data.length; v++) {
+                if (datainfo[u].name === pri_spec_data[v].p_name) {
+                    datainfo[u].cases = pri_spec_data[v].new_conf_cases
+                }
+
+            }
+        }
+
+        // set the state (If state is not saved, will causes problems)
+        this.setState({locations:datainfo});
+
+        // Updating COUNTYFP VALUES FOR SHADING.
+        for (var m = 0; m < 58; m++) {
+            county_ca.features[m].properties.COUNTYFP = 0
         }
 
         for (var k = 0; k < 58; k++) {
             var nm = county_ca.features[k].properties.NAME;
-
-            for (var j = 0; j < 58; j++) {
-
-                if (county_data[j].county === nm) {
-                    county_ca.features[k].properties.COUNTYFP = county_data[j].conf_cases
+            for (var j = 0; j < county_spec_data.length; j++) {
+                if (county_spec_data[j].county === nm) {
+                    county_ca.features[k].properties.COUNTYFP = county_spec_data[j].cases
                 }
-            
             }
-
         }
-
 
     }
 
     getColor = (n) => {
-        if(n > 2){
-            return "red";
+
+        if(n < 2) {
+            return "#CFEBF7"
         }
-        else{
-            return "blue";
+        else if(n < 5) {
+            return "#A2D7F0"
+        }
+        else if(n < 10) {
+            return "#42ABDB"
+        }
+        else if(n < 20) {
+            return "#19749F"
+        }
+        else {
+            return "#0C2533"
         }
     
     };
@@ -113,7 +135,7 @@ class MyMap extends Component {
 
             var elmnt = document.getElementById("info");
             elmnt.scrollIntoView({behavior: "smooth"});
-          });
+        });
 
         if(county.properties.COUNTYFP < 10) {
             layer.options.fillColor = "#FAF3AD"
@@ -130,11 +152,12 @@ class MyMap extends Component {
         else {
             layer.options.fillColor = "#B4461F"
         }
+        
 
     };
 
 
-    handlecheck = (event) =>{
+    handlecheck = (event) => {
        
         if(document.getElementById('chkbx').checked){
             this.setState({
@@ -151,8 +174,6 @@ class MyMap extends Component {
     }
 
     prisonPrint = (e) =>{
-
-        console.log(e)
 
         document.getElementById("info").style.visibility = "visible";
         document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + e.target._tooltip.options.children[1] + "<h2>" ;
@@ -195,7 +216,7 @@ class MyMap extends Component {
                 
                 style = {{border:"2px solid #393F44", height: "72vh", width: '70%', margin: 'auto'}} zoom = {6} center = {[37.5, -120]} scrollWheelZoom = {true}>
                     <GeoJSON style = {this.countyStyle} data ={county_ca.features} onEachFeature={this.onEachCounty} 
-                    onMouseMove={this.handleMove} onMouseLeave={this.handleLeave} />
+                    onMouseMove={this.handleMove} onMouseLeave={this.handleLeave}  />
                  
                  
                  
@@ -205,21 +226,17 @@ class MyMap extends Component {
                     />):("")}
 
 
-                    {this.state.locations.map((location,idx) => 
+                    {this.state.locations.map((location,idx=0) => 
 
                     <CircleMarker
-                    eventHandlers={{ 
-                        click: (e) => {
-                        this.prisonPrint(e)   
-                        },
-                        }}
-                        
+                    eventHandlers={{ click: (e) => {this.prisonPrint(e)}, }}
+
                         key={`marker-${idx}`}
                         center={location.position}
-                        fillOpacity={0.5}
-                        color="black"
-                        fillColor={this.getColor(1)}
-
+                        fillOpacity={1.0}
+                        color="blue"
+                        weight={0.5}
+                        fillColor={this.getColor(this.state.locations[idx].cases)}
                         >
                             <Tooltip>
                                 <span>

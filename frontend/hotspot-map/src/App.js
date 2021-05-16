@@ -141,6 +141,32 @@ class App extends React.Component {
   
     return data;
   }
+
+  async AllCountyData() {
+    if (this.state.theDate === '') {
+      this.state.theDate = '2021-05-03';
+    }
+    const response = await fetch('/AllCountyData/' + this.state.theDate);
+  
+    if (response.ok){
+      console.log("Connected to backend API from AllCountyData().");
+    }
+    else {
+      console.log("Could not connect to backend API from AllCountyData().");
+    }
+  }
+
+  async AllPrisonData() {
+
+    const response = await fetch('/AllPrisonData/' + this.state.theDate);
+  
+    if (response.ok){
+      console.log("Connected to backend API from AllPrisonData().");
+    }
+    else {
+      console.log("Could not connect to backend API from AllPrisonData().");
+    }
+  }
   
   async getCountyData() {
       const response = await fetch('/getCountyData/' + this.state.cty_uni_ref + " " + this.state.theDate);
@@ -160,12 +186,16 @@ class App extends React.Component {
 
 
   async componentDidMount() {
+    this.AllCountyData();
+    this.AllPrisonData();
     cty = this.loadCounties();
     pri = this.getPrison();
     vac = this.getVacLoc();
 
+    
+
     vac.then( result => {
-      console.log("locations", vac);
+      //console.log("locations", vac);
     });
     
 
@@ -222,9 +252,7 @@ class App extends React.Component {
           }
         }
     
-        this.setState({cty_uni_ref: uni_ref}, function () {
-   
-        });
+        this.setState({cty_uni_ref: uni_ref});
   
       }
       else {
@@ -284,6 +312,8 @@ class App extends React.Component {
     event.preventDefault()
     data = this.state;
     this.inputValidate(data);
+    this.AllCountyData();
+    this.AllPrisonData();
    } 
 
 
@@ -321,50 +351,55 @@ class App extends React.Component {
     }
     else if(valiData.selectPrison === 'None'){
       if(valiData.theDate){
-        console.log("one county")
-        document.getElementById("info").style.visibility = "visible";
         var cty_data = this.getCountyData();
-        console.log(cty_data);
         cty_data.then(function(result) {
-        console.log(result[0].conf_cases);
-        cty_cases = result[0].new_cases;
-        cty_deaths = result[0].new_deaths;
-        cty_tot_cases = result[0].cases;
-        cty_tot_deaths = result[0].deaths
-
-
-         document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + cty_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + cty_deaths + "<br><strong style='padding-left:15px'>Total cases so far : </strong>" + cty_tot_cases + "<br><strong style='padding-left:15px'>Total deaths so far : </strong>" + cty_tot_deaths;
+          if (result.length) {
+            document.getElementById("info").style.visibility = "visible";
+            cty_cases = result[0].new_cases;
+            cty_deaths = result[0].new_deaths;
+            cty_tot_cases = result[0].cases;
+            cty_tot_deaths = result[0].deaths
+            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + cty_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + cty_deaths + "<br><strong style='padding-left:15px'>Total cases so far : </strong>" + cty_tot_cases + "<br><strong style='padding-left:15px'>Total deaths so far : </strong>" + cty_tot_deaths;
+          } else {
+            document.getElementById("error").innerHTML = "Data not found for the selected date.";
+          }
+         
 
         });
         
       }
-      else{
+      else {
         document.getElementById("info").style.visibility = "visible";
         for(var j = 0; j < 58; j++){
           if(data.selectCounty === county_data[j].county){
             document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + county_data[j].conf_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + county_data[j].conf_deaths;
 
           }
-
         }
       }
      
     }
-    else{
+    else {
+
       if(data.theDate){
-        document.getElementById("info").style.visibility = "visible";
         var pri_data = this.getPrisonData();
-        console.log(pri_data);
         pri_data.then(function(result) {
-          console.log(result);
-          pri_cases = result[0].conf_cases;
-          pri_deaths = result[0].deaths;
-          pri_released = result[0].released_cases;
-          new_cases = result[0].new_conf_cases;
-          new_deaths = result[0].new_deaths;
-          console.log(pri_cases);
-          document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>"+ data.selectPrison +"</h3><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + new_cases + "<br><strong style='padding-left:15px;'> Confirmed Deaths:</strong> " + new_deaths + "<br><strong style='padding-left:15px;'> Confirmed Cases so far:</strong> " + pri_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths so far: </strong>" + pri_deaths + "<br><strong style='padding-left:15px'>Confirmed Release: </strong>" + pri_released;
-  
+          if (result.length) {
+            document.getElementById("info").style.visibility = "visible";
+            pri_cases = result[0].conf_cases;
+            pri_deaths = result[0].deaths;
+            pri_released = result[0].released_cases;
+            new_cases = result[0].new_conf_cases;
+            new_deaths = result[0].new_deaths;
+            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>"+ data.selectPrison +"</h3><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + new_cases + "<br><strong style='padding-left:15px;'> Confirmed Deaths:</strong> " + new_deaths + "<br><strong style='padding-left:15px;'> Confirmed Cases so far:</strong> " + pri_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths so far: </strong>" + pri_deaths + "<br><strong style='padding-left:15px'>Confirmed Release: </strong>" + pri_released;
+          } else {
+            pri_cases = 0;
+            pri_deaths = 0;
+            pri_released = 0;
+            new_cases = 0;
+            new_deaths = 0;
+            document.getElementById("error").innerHTML = "Data not found for the selected date.";
+          }
         });
       }
       else{

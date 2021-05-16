@@ -36,7 +36,7 @@ app.get('/load_counties', (req, res) => {
 });
 
 app.get('/get_prisons', (req, res) => {
-  let sql = "SELECT uni_ref, p_name, latitude, longitude, county, city FROM cal_prisons;";
+  let sql = "SELECT * FROM cal_prisons;";
   db.query(sql,(err, results) => {
       if (err) {
           return console.error('error: ' + err.message);
@@ -99,6 +99,59 @@ app.get('/getPrisonData/:val', (req, res) => {
           return console.error('error: ' + err.message);
       }
       console.log(" Successfully fetched dates! returning back to getPrisonData()!");
+
+      res.send(results);
+  });
+
+});
+
+
+app.get('/AllCountyData/:val', (req, res) => {
+
+  var qname = req.params.val;
+
+  console.log(qname);
+
+  let sql = "SELECT DISTINCT county,cases from cal_county_data WHERE date='" + qname+ "'";
+  console.log(sql);
+
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      const fs = require('fs')
+      try {
+        fs.writeFileSync('../frontend/hotspot-map/src/data/county_spec_data.json', JSON.stringify(results))
+      } catch (error) {
+        console.error(error)
+      }
+      console.log(" Successfully fetched dates! returning back to AllCountyData()!");
+
+      res.send(results);
+  });
+
+});
+
+app.get('/AllPrisonData/:val', (req, res) => {
+
+  var qname = req.params.val;
+
+  console.log(qname);
+
+  let sql = "SELECT DISTINCT p_name,new_conf_cases from prison_data WHERE date='" + qname+ "'";
+  console.log(sql);
+
+  db.query(sql,(err, results) => {
+      if (err) {
+          return console.error('error: ' + err.message);
+      }
+      const fs = require('fs')
+      try {
+        fs.writeFileSync('../frontend/hotspot-map/src/data/pri_spec_data.json', JSON.stringify(results))
+      } catch (error) {
+        console.error(error)
+      }
+      console.log(" Successfully fetched dates! returning back to AllPrisonData()!");
 
       res.send(results);
   });
