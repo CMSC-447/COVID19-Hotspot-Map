@@ -331,6 +331,7 @@ class App extends React.Component {
         // document.getElementById("error").style.color = "red";
         // document.getElementById("error").innerHTML = "You must choose a county, or both, a county and a prison";
       // }
+     
       // else{
         console.log("All county")
         console.log(valiData.theDate);
@@ -516,8 +517,6 @@ class App extends React.Component {
               <Bchart/>
 
             </div>
-
-      
       </div>
       </div>    
    
