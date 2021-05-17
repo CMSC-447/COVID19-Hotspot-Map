@@ -38,7 +38,6 @@ class App extends React.Component {
   
 
   // to find the today's date
-
   datetime = () => {
 
 
@@ -64,6 +63,7 @@ class App extends React.Component {
 
 
   }
+  // Load all the counties for the dropdown.
   async loadCounties() {
     const response = await fetch('/load_counties');   //how it gets backend
     const data = await response.json();
@@ -77,6 +77,7 @@ class App extends React.Component {
     return data;
   }
 
+  // Writes all the prisons to a file and also returns the result.
   async getPrison() {
     const response = await fetch('/get_prisons');
     const data = await response.json();
@@ -87,10 +88,10 @@ class App extends React.Component {
     else {
       console.log("Could not connect to backend API from getPrison().");
     }
-
     return data;
   }
 
+  // This gets the total number of cases for all prisons for the latest date.
   async getTotalPrisonCases() {
     const response = await fetch('/getTotalPrisonCases');
 
@@ -101,6 +102,8 @@ class App extends React.Component {
       console.log("Could not connect to backend API from getTotalPrisonCases().");
     }
   }
+
+  // Loads all the vaccine locations in california.
   async getVacLoc() {
     const response = await fetch('/getVacLoc');
 
@@ -112,6 +115,7 @@ class App extends React.Component {
     }
   }
 
+  // This gets the total number of cases for all counties for the latest date.
   async getTotalCountyCases() {
     const response = await fetch('/getTotalCountyCases');
 
@@ -123,6 +127,7 @@ class App extends React.Component {
     }
   }
 
+  // This gets the data for a selected prison and date.
   async getPrisonData() {
     const response = await fetch('/getPrisonData/' + this.state.pri_uni_ref + " " + this.state.theDate);
     const data = await response.json();
@@ -133,11 +138,10 @@ class App extends React.Component {
     else {
       console.log("Could not connect to backend API from getPrisonData().");
     }
-  
-  
     return data;
   }
 
+  // This gets the data for all counties given a date.
   async AllCountyData() {
     if (this.state.theDate === '') {
       this.state.theDate = '2021-05-03';
@@ -152,6 +156,7 @@ class App extends React.Component {
     }
   }
 
+  // This gets the data for all prison given a date.
   async AllPrisonData() {
 
     const response = await fetch('/AllPrisonData/' + this.state.theDate);
@@ -164,7 +169,7 @@ class App extends React.Component {
     }
   }
 
-  
+  // This gets the data for a selected county and date.
   async getCountyData() {
       const response = await fetch('/getCountyData/' + this.state.cty_uni_ref + " " + this.state.theDate);
       const data = await response.json();
@@ -175,8 +180,6 @@ class App extends React.Component {
       else {
         console.log("Could not connect to backend API from getCountyData()");
       }
-  
-  
       return data;
     }
 
@@ -191,8 +194,6 @@ class App extends React.Component {
     this.getTotalPrisonCases();
     this.getTotalCountyCases();
 
-
-    
     //probably need to move this to a new method
     if(!document.getElementById("myDate").value){
       document.getElementById("error").innerHTML = "No data avalible for <strong>" + displaytodaydate + "</strong> Showing data for <strong>2021-05-03</strong>";
@@ -360,18 +361,17 @@ class App extends React.Component {
         });
         
       }
-      else{
+      else {
         document.getElementById("info").style.visibility = "visible";
         for(var j = 0; j < 58; j++){
           if(data.selectCounty === county_data[j].county){
-
+            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + county_data[j].conf_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + county_data[j].conf_deaths;
           }
-
         }
       }
      
     }
-    else{
+    else {
       if(data.theDate){
         cty_data = this.getCountyData();
         cty_data.then(function(result) {
@@ -436,9 +436,7 @@ class App extends React.Component {
   scrollUp= ()=>{ 
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
- 
-
- 
+  
   render() {  
     const {theDate} = this.state 
     const {selectPrison} = this.state  

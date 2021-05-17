@@ -14,13 +14,15 @@ const db = mysql.createConnection({
 })
 
 
-// db connect
+// Establish the connection to the database.
 db.connect( err => {
   if(err) {
       return console.error('error: ' + err.message);
   }
   console.log('MySQL Connected.')
 })
+
+// Load all the counties for the dropdown.
 app.get('/load_counties', (req, res) => {
   let sql = "SELECT * FROM cal_counties;";
   db.query(sql,(err, results) => {
@@ -34,6 +36,7 @@ app.get('/load_counties', (req, res) => {
 
 });
 
+// Writes all the prisons to a file and also returns the result.
 app.get('/get_prisons', (req, res) => {
   let sql = "SELECT * FROM cal_prisons;";
   db.query(sql,(err, results) => {
@@ -52,6 +55,7 @@ app.get('/get_prisons', (req, res) => {
 
 });
 
+// This gets the total number of cases for all prisons for the latest date.
 app.get('/getTotalPrisonCases', (req, res) => {
   let sql = "SELECT * FROM total_pri_data;";
   db.query(sql,(err, results) => {
@@ -68,6 +72,7 @@ app.get('/getTotalPrisonCases', (req, res) => {
   });
 });
 
+// This gets the total number of cases for all counties for the latest date.
 app.get('/getTotalCountyCases', (req, res) => {
   let sql = "SELECT * FROM total_county_data;";
   db.query(sql,(err, results) => {
@@ -85,6 +90,7 @@ app.get('/getTotalCountyCases', (req, res) => {
 
 });
 
+// This gets the data for a selected prison and date.
 app.get('/getPrisonData/:val', (req, res) => {
 
   var qname = req.params.val || "";
@@ -103,7 +109,7 @@ app.get('/getPrisonData/:val', (req, res) => {
 
 });
 
-
+// This gets the data for all counties given a date.
 app.get('/AllCountyData/:val', (req, res) => {
 
   var qname = req.params.val || "";
@@ -129,6 +135,7 @@ app.get('/AllCountyData/:val', (req, res) => {
 
 });
 
+// This gets the data for all prison given a date.
 app.get('/AllPrisonData/:val', (req, res) => {
 
   var qname = req.params.val || "";
@@ -153,6 +160,7 @@ app.get('/AllPrisonData/:val', (req, res) => {
 
 });
 
+// This gets the data for a selected county and date.
 app.get('/getCountyData/:val', (req, res) => {
 
   var qname = req.params.val || "";
@@ -171,6 +179,7 @@ app.get('/getCountyData/:val', (req, res) => {
 
 });
 
+// Loads all the vaccine locations in california.
 app.get("/getVacLoc",(req, res) => {
 
   let sql = "SELECT * FROM vaccine_loc;";
@@ -189,19 +198,6 @@ app.get("/getVacLoc",(req, res) => {
   });
 
 });
-
-
-// app.get("/load-db",(req, res) => {
-//   let sql = "SELECT * FROM prison_data;";
-//   db.query(sql,(err, results) => {
-//       if (err) {
-//           return console.error('error: ' + err.message);
-//       }
-//       console.log(results)
-//       res.send("Query completed.")
-//   });
-
-// });
 
 app.listen('9000',() => {
   console.log("Server Started on port 9000.")
