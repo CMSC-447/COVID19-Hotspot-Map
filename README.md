@@ -27,7 +27,7 @@ To load the database on your local machine:
 
 - The covid_data.sql file is located under the  directory `COVID19-Hotspot-Map/Database/`.
 
-- Once the above command is executed ensure the database now exists. To do so, please log in to your MySQL on your local machine using a terminal and run the following command `mysql -u root -p` and enter your password. Once you log in, select `covid_data` as your db by running the command `use covid_data;` to make sure the database was loaded in.
+- Once the above command is executed ensure the database now exists. To do so, please log in to your MySQL on your local machine using a terminal and run the following command `mysql -u root -p` and enter your password. Once you log in, select `covid_data` as your db by running the command `use covid_data;` to make sure the database is loaded in.
 
 Updating database login info on node.js to allow the API to use the MySQL on your local machine:
 
