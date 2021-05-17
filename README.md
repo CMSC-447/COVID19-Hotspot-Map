@@ -9,8 +9,8 @@ MySQL
 Create React App
 
 Yarn Packages:
--react-chartjs-2 chart.js
--react-router-dom
+- react-chartjs-2 chart.js
+- react-router-dom
 
 
 Installation & Setup
