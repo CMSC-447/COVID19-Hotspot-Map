@@ -4,8 +4,6 @@ import Home from './h.png';
 import './App.css';
 import vac_loc from "./data/vaccine_location.json"
 
-
-  
 function vaccine(){
 
    

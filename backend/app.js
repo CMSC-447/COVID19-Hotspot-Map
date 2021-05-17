@@ -92,7 +92,7 @@ app.get('/getPrisonData/:val', (req, res) => {
   console.log(qname);
 
   let sql = "SELECT * FROM prison_" + qname[0] + " WHERE date='" + qname[1]+"'";
-  console.log(sql);
+
   db.query(sql,(err, results) => {
       if (err) {
           return console.error('error: ' + err.message);
@@ -107,12 +107,11 @@ app.get('/getPrisonData/:val', (req, res) => {
 
 app.get('/AllCountyData/:val', (req, res) => {
 
-  var qname = req.params.val;
+  var qname = req.params.val || "";
 
   console.log(qname);
 
   let sql = "SELECT DISTINCT county,cases from cal_county_data WHERE date='" + qname+ "'";
-  console.log(sql);
 
   db.query(sql,(err, results) => {
       if (err) {
@@ -133,12 +132,10 @@ app.get('/AllCountyData/:val', (req, res) => {
 
 app.get('/AllPrisonData/:val', (req, res) => {
 
-  var qname = req.params.val;
+  var qname = req.params.val || "";
 
-  console.log(qname);
 
   let sql = "SELECT DISTINCT p_name,new_conf_cases from prison_data WHERE date='" + qname+ "'";
-  console.log(sql);
 
   db.query(sql,(err, results) => {
       if (err) {
@@ -161,7 +158,6 @@ app.get('/getCountyData/:val', (req, res) => {
 
   var qname = req.params.val || "";
   qname = qname.split(" ");
-  console.log(qname);
 
   let sql = "SELECT * FROM county_" + qname[0] + " WHERE date='" + qname[1]+"'";
 
@@ -177,6 +173,7 @@ app.get('/getCountyData/:val', (req, res) => {
 });
 
 app.get("/getVacLoc",(req, res) => {
+
   let sql = "SELECT * FROM vaccine_loc;";
   db.query(sql,(err, results) => {
       if (err) {

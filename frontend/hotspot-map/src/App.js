@@ -15,7 +15,6 @@ var displaytodaydate;
 //var latestDataDate = "2021-05-03"
 var cty;
 var pri;
-var vac;
 var data = {}
 
 class App extends React.Component {
@@ -104,7 +103,6 @@ class App extends React.Component {
   }
   async getVacLoc() {
     const response = await fetch('/getVacLoc');
-    const data = await response.json();
 
     if (response.ok){
       console.log("Connected to backend API from getVacLoc().");
@@ -112,8 +110,6 @@ class App extends React.Component {
     else {
       console.log("Could not connect to backend API from getVacLoc().");
     }
-
-    return data;
   }
 
   async getTotalCountyCases() {
@@ -188,13 +184,10 @@ class App extends React.Component {
   async componentDidMount() {
     cty = this.loadCounties();
     pri = this.getPrison();
-    vac = this.getVacLoc();
+    this.getVacLoc();
     this.AllCountyData();
     this.AllPrisonData();
 
-    vac.then( result => {
-      console.log("locations", vac);
-    });
     this.getTotalPrisonCases();
     this.getTotalCountyCases();
 
