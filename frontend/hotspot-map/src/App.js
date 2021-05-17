@@ -446,7 +446,7 @@ class App extends React.Component {
       <div>   
       <div>
       
-        <div > <h2 style = {{textAlign: "Center"}}> California Covid-19 Hotspot Map</h2></div>
+        <div > <h2 style = {{textAlign: "Center", fontFamily:"Courier New"}}> California Covid-19 Hotspot Map</h2></div>
       
         <div style={{margin:"auto", textAlign:"center", width:"70%", display:"block", overflow:"auto"}}>
         <form style={{display: "inline-block"}} onSubmit={this.handleSubmit}>
@@ -456,7 +456,7 @@ class App extends React.Component {
           <select  style={{marginRight:"40px", marginBottom:"5px", paddingLeft:"10px", paddingRight:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}} value={this.state.selectCounty} onChange={this.selectLACounty.bind(this)}>
 
            
-            <option value=""  defaultValue >SELECT COUNTY</option>
+            <option value=""  defaultValue >select county</option>
             {this.state.county.map(x => {
               return <option key={x.c_name}>{x.c_name}</option>
             })}
@@ -467,7 +467,7 @@ class App extends React.Component {
           <select onChange={this.selectLAPrison.bind(this)} value={this.state.selectPrison} style={{marginBottom:"5px", paddingRight:"10px", marginRight:"40px", paddingLeft:"10px", height:"30px", width:"200px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA"}}>
 
            
-            <option value="" defaultValue>SELECT PRISON</option>
+            <option value="" defaultValue>select prison</option>
             {
               this.state.prisons.map(x => { 
                 return <option  key={x.p_name}>{x.p_name}</option>     
@@ -483,7 +483,7 @@ class App extends React.Component {
 
           <input id="myDate" type="date" min="2020-03-10" max="2021-05-03" name="theDate" onChange= {this.handleInputChange} style={{ marginBottom:"5px", marginRight:"40px", height:"30px", width:"170px", border:"2px black solid", backgroundColor:"#393F44", color:"#D8D9DA", paddingLeft:"10px"}}></input>
       
-          <button className="sbmt_btn" style={{ cursor:"pointer", marginBottom:"5px", height:"30px", width:"100px", border:"2px black solid",  color:"#D8D9DA", paddingLeft:"10px"}}>SUBMIT</button>
+          <button className="sbmt_btn" style={{ cursor:"pointer", marginBottom:"5px", height:"30px", width:"100px", border:"2px black solid",  color:"#D8D9DA", paddingLeft:"10px"}}>submit</button>
 
         </div>
         </form>

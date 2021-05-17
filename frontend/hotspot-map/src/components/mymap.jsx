@@ -79,19 +79,19 @@ class MyMap extends Component {
     getColor = (n) => {
  
         if(n < 2) {
-            return "#CFEBF7"
+            return "#049ce6"
         }
         else if(n < 5) {
-            return "#A2D7F0"
+            return "#038acc"
         }
         else if(n < 10) {
-            return "#42ABDB"
+            return "#0379b3"
         }
         else if(n < 20) {
-            return "#19749F"
+            return "#026899"
         }
         else {
-            return "#0C2533"
+            return "#025780"
         }
 
     };
@@ -245,7 +245,7 @@ class MyMap extends Component {
                             key={`marker-${idx}`}
                             center={location.position}
                             fillOpacity={1.0}
-                            color="blue"
+                            color="black"
                             weight={0.5}
                             fillColor={this.getColor(this.state.locations[idx].cases)}
     
