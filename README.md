@@ -10,9 +10,9 @@ Dependencies:
 
 Yarn Packages:
 - react-router-dom 
-      * npm install react-router-dom --save
+     * npm install react-router-dom --save
 -  react-chartjs-2
-      * yarn add react-chartjs-2 chart.js
+     * yarn add react-chartjs-2 chart.js
 
 
 Installation & Setup
