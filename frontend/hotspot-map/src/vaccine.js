@@ -13,20 +13,17 @@ function vaccine(){
     return(
         <div>
             <div > <h1 style = {{textAlign: "Center"}}> Find a COVID-19 vaccine</h1></div>
-            <div style={{height:"100px", width:"70%", margin:"auto"}}>
-            {/* <input id="input" style={{ fontSize:"18px", marginTop:"30px", border:"2px solid black", borderRadius:"20px", height:"40px", paddingLeft:"10px", marginRight:"20px",width:"250px"}} type="text" name="myCountry" placeholder="Enter County or Zip Code"/> */}
-            {/* <span style={{ fontSize:"18px", marginRight:"20px"}}>OR</span> */}
+            <div style={{height:"100px", width:"50%", margin:"auto"}}>
             <button style={{fontSize:"14px", marginTop:"30px", border:"2px solid black", borderRadius:"20px", height:"40px", marginRight:"20px", width:"130px"}} onClick={getLocation}>Use my location</button>
-            {/* <button style={{fontSize:"15px", marginTop:"30px", border:"2px solid black",  borderRadius:"20px", height:"40px", marginRight:"20px", width:"130px"}}>Find Vaccine</button> */}
             <Link to="/"><div className="home_btn" style={{ marginTop:"22px", borderRadius:"8px", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",float:"right", padding:"8px", marginRight:"30px", cursor:"pointer"}} >
             <img alt="Home" title="Home" style={{width:"40px", height:"40px"}} src={Home}/>
             </div>
             </Link>
              </div>
-             <div id="loc_wrapper" style={{ border:"2px black solid", padding:"30px", textAlign:"left", paddingBottom:"30px", height:"auto", width:"60%", margin:"auto"}}>
-             <div id="distance" style={{  textAlign:"left", display:"inline-block" , height:"auto", width:"15%"}}></div>
-                <div id="name" style={{ textAlign:"left", display:"inline-block" , height:"auto", width:"70%"}}></div>
-                
+             <div id="loc_wrapper" style={{ alignItems:"center" , alignContent:"center", border:"2px black solid", textAlign:"left", paddingBottom:"30px", height:"auto", width:"50%", margin:"auto"}}>
+               
+             <div id="distance" style={{ color:"red",  padding:"10px 10px 0 10px",textAlign:"left", display:"inline-block" }}></div>
+                <div id="name" style={{ textAlign:"left", display:"inline-block"}}></div>
              </div>
 
         </div>
@@ -46,7 +43,7 @@ function getLocation() {
     var vaccine_distance =  [];  
     
     document.getElementById("name").innerHTML =  "";
-
+    document.getElementById("distance").innerHTML =  "";
     for(var i = 0; i < Object.keys(vac_loc).length; i++){
       var lat = vac_loc[i].latitude;
       var lng = vac_loc[i].longitude; 
