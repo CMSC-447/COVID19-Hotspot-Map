@@ -1,6 +1,6 @@
 import React from "react"
 import {Link} from 'react-router-dom';
-import Home from './h.png';
+import Home from './components/h.png';
 import './App.css';
 import vac_loc from "./data/vaccine_location.json"
 
