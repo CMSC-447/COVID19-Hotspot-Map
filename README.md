@@ -47,6 +47,6 @@ To run the application using a Makefile (will only work on Linux based OS):
 
 - Open a terminal and navigate to `COVID19-Hotspot-Map/frontend/hotspot-map/` directory, and run `make`. This should execute all the neccessary commands needed and start the application.
 
-The data used is from the following repositories:
-https://github.com/nytimes/covid-19-data/blob/master/us-counties.csv
-https://github.com/datadesk/california-coronavirus-data/blob/master/cdcr-prison-totals.csv
+The sources of the data are from the following repositories:
+- https://github.com/nytimes/covid-19-data/blob/master/us-counties.csv
+- https://github.com/datadesk/california-coronavirus-data/blob/master/cdcr-prison-totals.csv
