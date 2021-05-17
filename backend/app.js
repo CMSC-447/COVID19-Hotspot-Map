@@ -89,7 +89,6 @@ app.get('/getPrisonData/:val', (req, res) => {
 
   var qname = req.params.val || "";
   qname = qname.split(" ");
-  console.log(qname);
 
   let sql = "SELECT * FROM prison_" + qname[0] + " WHERE date='" + qname[1]+"'";
 
@@ -97,7 +96,7 @@ app.get('/getPrisonData/:val', (req, res) => {
       if (err) {
           return console.error('error: ' + err.message);
       }
-      console.log(" Successfully fetched dates! returning back to getPrisonData()!");
+      console.log("Successfully fetched dates! returning back to getPrisonData()!");
 
       res.send(results);
   });
@@ -123,7 +122,7 @@ app.get('/AllCountyData/:val', (req, res) => {
       } catch (error) {
         console.error(error)
       }
-      console.log(" Successfully fetched dates! returning back to AllCountyData()!");
+      console.log("Successfully fetched dates! returning back to AllCountyData()!");
 
       res.send(results);
   });
@@ -147,7 +146,7 @@ app.get('/AllPrisonData/:val', (req, res) => {
       } catch (error) {
         console.error(error)
       }
-      console.log(" Successfully fetched dates! returning back to AllPrisonData()!");
+      console.log("Successfully fetched dates! returning back to AllPrisonData()!");
 
       res.send(results);
   });
@@ -165,7 +164,7 @@ app.get('/getCountyData/:val', (req, res) => {
       if (err) {
           return console.error('error: ' + err.message);
       }
-      console.log(" Successfully fetched dates! returning back to getCountyData()!");
+      console.log("Successfully fetched dates! returning back to getCountyData()!");
 
       res.send(results);
   });
