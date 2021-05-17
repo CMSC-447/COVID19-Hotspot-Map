@@ -314,6 +314,7 @@ class App extends React.Component {
 
 
   inputValidate(valiData){
+    
     var total_deaths = 0;
     var total_cases = 0;
     var pri_cases = 0;
@@ -331,7 +332,6 @@ class App extends React.Component {
         // document.getElementById("error").style.color = "red";
         // document.getElementById("error").innerHTML = "You must choose a county, or both, a county and a prison";
       // }
-     
       // else{
         console.log("All county")
         console.log(valiData.theDate);
@@ -341,13 +341,12 @@ class App extends React.Component {
   
         // }
         document.getElementById("info").style.visibility = "visible";
-        document.getElementById("info").innerHTML = "<h2 style='text-align:center;'>California</h2><h3 style='text-align:center'>03/10/2020 - 05/03/2021</h3><strong style='padding-left:15px'>Confirmed Cases:</strong> " + total_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths </strong>" + total_deaths;
-  
-
+        document.getElementById("info").innerHTML = "<h2 style='font-family:Andale Mono, monospace; text-align:center;'>California</h2><h3 style=' font-family:Andale Mono, monospace; text-align:center'>03/10/2020 - 05/03/2021</h3><strong style='padding-left:15px; font-family:Andale Mono, monospace'>Confirmed Cases:</strong> <span style='font-family:Andale Mono, monospace'>" + total_cases + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Deaths </strong><span style='font-family:Andale Mono, monospace'>" + total_deaths + "</span>";
       }
 
     }
     else if(valiData.selectPrison === 'None'){
+      console.log("here")
       if(valiData.theDate){
         var cty_data = this.getCountyData();
         cty_data.then(function(result) {
@@ -358,9 +357,12 @@ class App extends React.Component {
             cty_deaths = result[0].new_deaths;
             cty_tot_cases = result[0].cases;
             cty_tot_deaths = result[0].deaths
-            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + cty_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + cty_deaths + "<br><strong style='padding-left:15px'>Total cases so far : </strong>" + cty_tot_cases + "<br><strong style='padding-left:15px'>Total deaths so far : </strong>" + cty_tot_deaths;
+            document.getElementById("info").innerHTML = "<h2 style='text-align:center; font-family:Andale Mono, monospace;'>" + data.selectCounty + " </h2><h3 style='text-align:center; font-family:Andale Mono, monospace;'>" + data.theDate + "</h3><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Confirmed Cases today: </strong><span style='font-family:Andale Mono, monospace;'> " + cty_cases + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Deaths today: </strong><span style ='font-family:Andale Mono, monospace;' >" + cty_deaths + "<br><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Total cases so far : </strong><span style='font-family:Andale Mono, monospace;'>" + cty_tot_cases + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Total deaths so far : </strong><span style='font-family:Andale Mono, monospace;'>" + cty_tot_deaths + "</span>";
           } else {
             document.getElementById("error").innerHTML = "Data not found for the selected date.";
+            document.getElementById("error").style.color = "red";
+            document.getElementById("info").innerHTML = "";
+            
           }
         });
         
@@ -369,7 +371,6 @@ class App extends React.Component {
         document.getElementById("info").style.visibility = "visible";
         for(var j = 0; j < 58; j++){
           if(data.selectCounty === county_data[j].county){
-            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + county_data[j].conf_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + county_data[j].conf_deaths;
 
           }
 
@@ -379,6 +380,23 @@ class App extends React.Component {
     }
     else{
       if(data.theDate){
+        cty_data = this.getCountyData();
+        cty_data.then(function(result) {
+  
+          if (result.length) {
+            document.getElementById("info").style.visibility = "visible";
+            cty_cases = result[0].new_cases;
+            cty_deaths = result[0].new_deaths;
+            cty_tot_cases = result[0].cases;
+            cty_tot_deaths = result[0].deaths
+            document.getElementById("info").innerHTML = "<h2 style=' font-family:Andale Mono, monospace; text-align:center'>County Data<h2><h3 style=' font-family:Andale Mono, monospace; text-align:center'>"+ data.selectCounty +"</h3><h3 style=' font-family:Andale Mono, monospace; text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Cases today:</strong> <span style=' font-family:Andale Mono, monospace;'>" + cty_cases + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Confirmed Deaths today:</strong> <span style='font-family:Andale Mono, monospace;'>" + cty_deaths + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Confirmed Cases so far:</strong> <span style=' font-family:Andale Mono, monospace;'>" +cty_tot_cases + "<br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Deaths so far: </strong> <span style=' font-family:Andale Mono, monospace;'>" + cty_tot_deaths + "</span>";
+          } else {
+            document.getElementById("error").innerHTML = "Data not found for the selected date.";
+            document.getElementById("error").style.color = "red";
+            document.getElementById("info").innerHTML = "";
+            
+          }
+        });
         var pri_data = this.getPrisonData();
         pri_data.then(function(result) {
 
@@ -389,7 +407,8 @@ class App extends React.Component {
             pri_released = result[0].released_cases;
             new_cases = result[0].new_conf_cases;
             new_deaths = result[0].new_deaths;
-            document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectCounty + " </h2><h3 style='text-align:center'>"+ data.selectPrison +"</h3><h3 style='text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + new_cases + "<br><strong style='padding-left:15px;'> Confirmed Deaths:</strong> " + new_deaths + "<br><strong style='padding-left:15px;'> Confirmed Cases so far:</strong> " + pri_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths so far: </strong>" + pri_deaths + "<br><strong style='padding-left:15px'>Confirmed Release: </strong>" + pri_released;
+            document.getElementById("info").innerHTML += "<h2 style=' font-family:Andale Mono, monospace; text-align:center'>Prison Data<h2><h3 style=' font-family:Andale Mono, monospace; text-align:center'>"+ data.selectPrison +"</h3><h3 style=' font-family:Andale Mono, monospace; text-align:center'>" + data.theDate + "</h3><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Cases today:</strong> <span style=' font-family:Andale Mono, monospace;'>" + new_cases + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Confirmed Deaths today:</strong> <span style='font-family:Andale Mono, monospace;'>" + new_deaths + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Confirmed Cases so far:</strong> <span style=' font-family:Andale Mono, monospace;'>" + pri_cases + "<br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Deaths so far: </strong> <span style=' font-family:Andale Mono, monospace;'>" + pri_deaths + "</span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Confirmed Release so far: </strong> <span style='font-family:Andale Mono, monospace;'>" + pri_released + "</span>";
+            
           } else {
             pri_cases = 0;
             pri_deaths = 0;
@@ -397,6 +416,8 @@ class App extends React.Component {
             new_cases = 0;
             new_deaths = 0;
             document.getElementById("error").innerHTML = "Data not found for the selected date.";
+            document.getElementById("error").style.color = "red";
+            document.getElementById("info").innerHTML = "";
           }
         });
       }
@@ -408,6 +429,7 @@ class App extends React.Component {
             for(var l = 0; l < Object.keys(prison_data).length; l++ ){
               
               if(prison_data[l].uni_ref === marker_data[k].uni_ref){
+                document.getElementById("info").innerHTML = "<h2 style='text-align:center; font-family:Andale Mono, monospace;'>" + data.selectPrison  + " </h2><h3 style='text-align:center; font-family:Andale Mono, monospace;'>" + data.selectCounty + " </h3><strong style='padding-left:15px; font-family:Andale Mono, monospace;'> Total Confirmed Cases:</strong> <span style='font-family:Andale Mono, monospace;'>" + prison_data[l].conf_cases + "<span><br><strong style='padding-left:15px; font-family:Andale Mono, monospace;'>Total Confirmed Deaths: </strong><apan style='font-family:Andale Mono, monospace;'" + prison_data[l].conf_deaths + "</span><strong style='padding-left:15px; font-family:Andale Mono, monospace'>Total Confirmed Release: </strong><span style='font-family:Andale Mono, monospace'> " + prison_data[l].rel_cases + "</span>";
                 
                 document.getElementById("info").innerHTML = "<h2 style='text-align:center'>" + data.selectPrison + " </h2><h3 style='text-align:center'>" + data.selectCounty + " </h3><strong style='padding-left:15px;'> Confirmed Cases:</strong> " + prison_data[l].conf_cases + "<br><strong style='padding-left:15px'>Confirmed Deaths: </strong>" + prison_data[l].conf_deaths + "<br><strong style='padding-left:15px'>Confirmed Release: </strong>" + prison_data[l].rel_cases;
               }
@@ -517,6 +539,8 @@ class App extends React.Component {
               <Bchart/>
 
             </div>
+
+      
       </div>
       </div>    
    
