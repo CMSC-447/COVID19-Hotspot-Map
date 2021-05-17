@@ -8,7 +8,7 @@ Dependencies:
 - MySQL
 - React App
 
-Yarn Packages:
+Install Yarn Packages:
 - react-router-dom 
      * npm install react-router-dom --save
 -  react-chartjs-2
