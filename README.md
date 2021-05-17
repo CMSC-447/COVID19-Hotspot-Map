@@ -19,7 +19,7 @@ Installation & Setup
 
 - Ensure the system is installed with the up-to-date software requirements as discussed in section 2.2. 
 
-- Download the code from the Github repository, using the following link: https://github.com/CMSC-447/COVID19-Hotspot-Map.git
+- Download the code from the Github repository, using the following link: https://github.com/CMSC-447/COVID19-Hotspot-Map.git or https://github.com/CMSC-447/COVID19-Hotspot-Map
 
 To load the database on your local machine:
 
