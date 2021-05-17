@@ -2,27 +2,14 @@ import React, { Component } from 'react';
 import { MapContainer, GeoJSON, TileLayer, Tooltip, CircleMarker} from "react-leaflet";
 import county_ca from './../data/county_ca.json';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import data from './../data/markers.json';
-import icon from './blue-pin.png';
 import county_data from './../data/total_county_data.json';
 import prison_data from './../data/total_pri_data.json';
 import county_spec_data from './../data/county_spec_data.json';
 import pri_spec_data from './../data/pri_spec_data.json';
 
 
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    iconSize:[20,20],
-    iconAnchor:[5,10],
-    popupAnchor:[5,5]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
-
 var datainfo = [];
-
 
 class MyMap extends Component {
     constructor (props) {
@@ -37,7 +24,7 @@ class MyMap extends Component {
 
     componentDidMount() {
 
-       console.log(county_data[1].conf_cases);
+       //console.log(county_data[1].conf_cases);
 
         window.onbeforeunload = function () {
             window.scrollTo(0, 0);
@@ -63,42 +50,41 @@ class MyMap extends Component {
 
         for (var m = 0; m < 58; m++) {
             county_ca.features[m].properties.COUNTYFP = 0
+        }
 
-    }
-
-    for (var k = 0; k < 58; k++) {
-        var nm = county_ca.features[k].properties.NAME;
-        for (var j = 0; j < county_spec_data.length; j++) {
-            if (county_spec_data[j].county === nm) {
-                county_ca.features[k].properties.COUNTYFP = county_spec_data[j].cases
+        for (var k = 0; k < 58; k++) {
+            var nm = county_ca.features[k].properties.NAME;
+            for (var j = 0; j < county_spec_data.length; j++) {
+                if (county_spec_data[j].county === nm) {
+                    county_ca.features[k].properties.COUNTYFP = county_spec_data[j].new_cases
+                }
             }
         }
-    }
 
     }
     getColor = (n) => {
  
         if(n < 2) {
-            return "#049ce6"
+            return "#049ce6"//"#FAF3AD"
         }
         else if(n < 5) {
-            return "#038acc"
+            return "#038acc"//"#F3CC71"//
         }
         else if(n < 10) {
-            return "#0379b3"
+            return "#0379b3"//"#EEAE33"//
         }
         else if(n < 20) {
-            return "#026899"
+            return "#026899"//"#DD7225"//
         }
         else {
-            return "#025780"
+            return "#025780"//"#B4461F"//
         }
 
     };
 
     countyStyle = {
         fillColor: "grey",
-        fillOpacity: .6,
+        fillOpacity: 1.0,
         color: "black",
         weight:.6,
 
@@ -148,20 +134,20 @@ class MyMap extends Component {
             elmnt.scrollIntoView({behavior: "smooth"});
           });
 
-        if(county.properties.COUNTYFP < 10) {
-            layer.options.fillColor = "#FAF3AD"
+        if(county.properties.COUNTYFP < 50) {
+            layer.options.fillColor = "#fce49c"
         }
-        else if(county.properties.COUNTYFP < 1000) {
-            layer.options.fillColor = "#F3CC71"
+        else if(county.properties.COUNTYFP < 100) {
+            layer.options.fillColor = "#fcc960"
         }
-        else if(county.properties.COUNTYFP < 10000) {
-            layer.options.fillColor = "#EEAE33"
+        else if(county.properties.COUNTYFP < 200) {
+            layer.options.fillColor = "#fea33e"
         }
-        else if(county.properties.COUNTYFP < 100000) {
-            layer.options.fillColor = "#DD7225"
+        else if(county.properties.COUNTYFP < 500) {
+            layer.options.fillColor = "#da6e26"
         }
         else {
-            layer.options.fillColor = "#B4461F"
+            layer.options.fillColor = "#a2461a"
         }
     };
 
@@ -199,8 +185,8 @@ class MyMap extends Component {
         for(var k = 0; k < Object.keys(prison_data).length; k++){
             
             if(datainfo[index].uni_ref === prison_data[k].uni_ref ){
-                console.log("data array id", datainfo[index].uni_ref)
-                console.log("new file", datainfo[index].uni_ref)
+                //console.log("data array id", datainfo[index].uni_ref)
+                //console.log("new file", datainfo[index].uni_ref)
                 document.getElementById("info").innerHTML +=  "<strong style='padding-Left: 10px'>Total Cases: </strong>" + prison_data[k].conf_cases;
                 document.getElementById("info").innerHTML +=  "<br> <strong style='padding-Left: 10px'>Total Deaths: </strong>" + prison_data[k].conf_deaths;
             }
@@ -226,8 +212,6 @@ class MyMap extends Component {
                     <GeoJSON style = {this.countyStyle} data ={county_ca.features} onEachFeature={this.onEachCounty} 
                     onMouseMove={this.handleMove} onMouseLeave={this.handleLeave} />
                  
-                 
-                 
                     {check ? (<TileLayer style={{visibility:"hidden"}}
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
@@ -235,7 +219,6 @@ class MyMap extends Component {
 
 
                         {this.state.locations.map((location,idx=0) =>  
-
 
                         // marker and detailed display.
                         <CircleMarker
@@ -245,6 +228,7 @@ class MyMap extends Component {
                             key={`marker-${idx}`}
                             center={location.position}
                             fillOpacity={1.0}
+                        
                             color="black"
                             weight={0.5}
                             fillColor={this.getColor(this.state.locations[idx].cases)}

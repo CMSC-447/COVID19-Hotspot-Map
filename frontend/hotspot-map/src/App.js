@@ -289,7 +289,7 @@ class App extends React.Component {
   handleInputChange = (event) =>{
 
     event.preventDefault()
-    console.log(event.target.value)
+    //console.log(event.target.value)
     this.setState({
       theDate: event.target.value
     })
@@ -510,6 +510,24 @@ class App extends React.Component {
         <div>
     
           <MyMap />
+
+          <div style={{ height:"50px", width:"70%", margin:"auto", border:"2px solid #393F44", borderTop:'none'}}>
+              <div className="legend" style={{ height:"50px", width:"50%", float:"left", display:"inline-block"}} ><span className="hoverText">Prison Legend</span>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#049CE6", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>0 - 1</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#038ACC", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>2 - 4</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#0379B3", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>5 - 9</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#026899", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>10 - 19</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#025780", float:"left", display:"inline-block"}} > <strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>20+</strong></div>
+            </div>
+            <div className="legend" style={{ height:"50px", width:"50%", backgroundColor:"orange", float:"right"}} ><span className="hoverText">County Legend</span>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#A2461A", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}> 500+</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#DA6E26", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}> 200 - 499</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#FEA33E", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>100 - 199</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#FCC960", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>50 - 99</strong></div>
+              <div style={{ height:"50px", width:"20%", backgroundColor:"#FCE49C", float:"left", display:"inline-block"}} ><strong style={{textAlign:"center", verticalAlign:"middle", lineHeight:"50px"}}>0 - 49</strong></div>
+
+            </div>
+          </div>
 
           <div id="scroll_up" style={{paddingTop:"20px", visibility:"visible", float:"right", width: '20%', margin: 'auto', display:"flex"}} >
                     <span onClick={this.scrollUp.bind(this)}>

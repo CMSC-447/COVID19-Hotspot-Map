@@ -8,19 +8,19 @@ var randomColorGenerator = function () {
     var color = [];
     for(var i = 0; i < Object.keys(pri_data).length; i++){
         if(pri_data[i].conf_cases < 600){
-            color.push('#FAF3AD');
+            color.push('#049CE6');
         }
         else if(pri_data[i].conf_cases < 1200){
-            color.push('#F3CC71');
+            color.push('#038ACC');
         }
         else if(pri_data[i].conf_cases < 1800){
-            color.push('#EEAE33');
+            color.push('#0379B3');
         }
         else if(pri_data[i].conf_cases < 2400){
-            color.push('#DD7225');
+            color.push('#026899');
         }
         else if(pri_data[i].conf_cases >= 2400){
-            color.push('#B4461F');
+            color.push('#025780');
         }
 
     }

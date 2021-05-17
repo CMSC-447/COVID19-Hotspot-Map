@@ -114,9 +114,7 @@ app.get('/AllCountyData/:val', (req, res) => {
 
   var qname = req.params.val || "";
 
-  console.log(qname);
-
-  let sql = "SELECT DISTINCT county,cases from cal_county_data WHERE date='" + qname+ "'";
+  let sql = "SELECT DISTINCT county,new_cases from cal_county_data WHERE date='" + qname+ "'";
 
   db.query(sql,(err, results) => {
       if (err) {

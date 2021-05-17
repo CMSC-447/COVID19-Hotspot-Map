@@ -53,7 +53,7 @@ function getLocation() {
       if (d > 2000){
        
         if(vac_loc[i].name === null || vac_loc[i].county === null || vac_loc[i].zip === null ){
-          console.log("hi")
+          //console.log("hi")
 
         }
         else{
